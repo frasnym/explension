@@ -10,8 +10,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Create an account",
+                      "Welcome Back!",
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     const SizedBox(height: 10),
@@ -36,13 +36,13 @@ class _LoginPageState extends State<LoginPage> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text("Already have an account?"),
+                          const Text("Don't have an account yet?"),
                           TextButton(
                             onPressed: () {
-                              print('Navigate to login page');
+                              print('Navigate to registration page');
                             },
                             child: const Text(
-                              'Login',
+                              'Sign Up',
                               style: TextStyle(
                                 color: Colors.purple,
                                 fontWeight: FontWeight.bold,
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    const InputText(label: "Email address"),
+                    const InputText(label: "Email Address"),
                     const SizedBox(height: 20),
                     const InputText(label: "Password"),
                     const SizedBox(height: 10),
@@ -79,11 +79,11 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
+                              const SnackBar(content: Text('Logging in...')),
                             );
                           }
                         },
-                        child: const Text('Continue'),
+                        child: const Text('Log In'),
                       ),
                     ),
                   ],
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
             right: 16.0,
             child: FooterText(
               text:
-                  'By creating an account you are agreeing to our Terms and Conditions.',
+                  'By logging in, you agree to our Terms of Service and Privacy Policy.',
             ),
           ),
         ],
@@ -107,8 +107,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 }
