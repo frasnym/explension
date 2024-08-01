@@ -18,31 +18,40 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            title: Text(
+              "IDR 30.000.000",
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
             expandedHeight: 200.0,
-            floating: true,
-            pinned: false,
+            floating: false,
+            pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: Row(
+              background: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _buildDropdown(
-                    value: _periodSelectedValue,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _periodSelectedValue = newValue!;
-                      });
-                    },
-                    items: ['This Week', 'This Month', 'This Year'],
-                  ),
-                  const SizedBox(width: 20),
-                  _buildDropdown(
-                    value: _walletSelectedValue,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _walletSelectedValue = newValue!;
-                      });
-                    },
-                    items: ['Cash', 'Credit Card'],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      _buildDropdown(
+                        value: _periodSelectedValue,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _periodSelectedValue = newValue!;
+                          });
+                        },
+                        items: ['This Week', 'This Month', 'This Year'],
+                      ),
+                      const SizedBox(width: 20),
+                      _buildDropdown(
+                        value: _walletSelectedValue,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _walletSelectedValue = newValue!;
+                          });
+                        },
+                        items: ['Cash', 'Credit Card'],
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -104,7 +113,7 @@ class _HomePageState extends State<HomePage> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         width: 100,
-        child: const Placeholder(),
+        child: const Placeholder(child: Text("Expense Category")),
       ),
       title: Text(transaction['description'] as String),
       subtitle: Text(transaction['date'] as String),
