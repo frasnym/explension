@@ -1,4 +1,5 @@
 import 'package:explension/screens/auth/login.dart';
+import 'package:explension/screens/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,10 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Explension',
       theme: ThemeData(
         textTheme: const TextTheme(
           headlineLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          headlineMedium: TextStyle(fontSize: 16),
           bodyMedium: TextStyle(fontSize: 14, color: Colors.grey),
         ),
         primaryColor: Colors.purple,
@@ -29,10 +31,14 @@ class MyApp extends StatelessWidget {
             minimumSize: const Size(double.infinity, 50),
           ),
         ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.purple,
+          foregroundColor: Colors.white,
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: const HomePage(),
     );
   }
 }
