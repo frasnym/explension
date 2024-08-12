@@ -95,8 +95,10 @@ class _HomePageState extends State<HomePage> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return _buildTransactionTile(
-                    _expenseService.getExpenses()[index]);
+                // Get the reversed list of expenses
+                final expenses =
+                    _expenseService.getExpenses().reversed.toList();
+                return _buildTransactionTile(expenses[index]);
               },
               childCount: _expenseService.getExpenses().length,
             ),
