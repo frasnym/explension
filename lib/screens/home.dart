@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:explension/constants.dart';
+import 'package:explension/models/expense.dart';
+import 'package:explension/services/expense.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,8 +13,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<Expense> _expenses = [];
+  final ExpenseService _expenseService = ExpenseService();
   String _periodSelectedValue = 'This Week';
   String _walletSelectedValue = 'Cash';
+
+  // TODO: Replace this function later with real function
+  void _addRandomExpense() {
+    final random = Random();
+
+    // create random double amount between 0 and 1000000
+    final amount = random.nextDouble() * 1000000;
+
+    // create random categoryId between 1 and 10
+    final categoryId = random.nextInt(10) + 1;
+
+    // create random sourceId between 1 and 5
+    final sourceId = random.nextInt(5) + 1;
+
+    final newExpense = Expense(
+      amount: amount,
+      categoryId: categoryId,
+      sourceId: sourceId,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      note: '',
+    );
+
+    _expenseService.addExpense(newExpense);
+
+    setState(() {
+      _expenses.add(newExpense);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +95,17 @@ class _HomePageState extends State<HomePage> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return _buildTransactionTile(index);
+                return _buildTransactionTile(
+                    _expenseService.getExpenses()[index]);
               },
-              childCount: 20,
+              childCount: _expenseService.getExpenses().length,
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to the add expense page
-          print('Navigate to add expense page');
+          _addRandomExpense();
         },
         tooltip: 'Add Expense',
         child: const Icon(Icons.add),
@@ -102,27 +137,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildTransactionTile(int index) {
-    final transaction = {
-      'date': '2024-07-28',
-      'description': 'Transaction $index',
-      'amount': index % 2 == 0 ? -100.00 : 100.00,
-    };
-
+  Widget _buildTransactionTile(Expense expense) {
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
         width: 100,
         child: const Placeholder(child: Text("Expense Category")),
       ),
-      title: Text(transaction['description'] as String),
-      subtitle: Text(transaction['date'] as String),
+      title: Text(expense.categoryId.toString()),
+      subtitle: Text(expense.subCategoryId.toString()),
       trailing: Text(
-        '\$${(transaction['amount'] as double).toStringAsFixed(2)}',
-        style: TextStyle(
-          color:
-              (transaction['amount'] as double) < 0 ? Colors.red : Colors.green,
-        ),
+        '\$${(expense.amount).toStringAsFixed(2)}',
       ),
     );
   }
