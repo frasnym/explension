@@ -1,3 +1,4 @@
+import 'package:explension/models/expense_category.dart';
 import 'package:explension/models/expense_source.dart';
 import 'package:hive/hive.dart';
 
@@ -8,9 +9,9 @@ class Expense {
   @HiveField(1)
   final double amount;
   @HiveField(2)
-  final int categoryId;
+  final ExpenseCategory category;
   @HiveField(3)
-  int? subCategoryId;
+  ExpenseCategory? subCategory;
   @HiveField(4)
   final ExpenseSource source;
   @HiveField(5)
@@ -22,8 +23,8 @@ class Expense {
 
   Expense({
     required this.amount,
-    required this.categoryId,
-    this.subCategoryId,
+    required this.category,
+    this.subCategory,
     required this.source,
     required this.createdAt,
     required this.updatedAt,

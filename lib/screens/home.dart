@@ -4,7 +4,8 @@ import 'package:explension/constants.dart';
 import 'package:explension/injector.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/services/expense.dart';
-import 'package:explension/services/source.dart';
+import 'package:explension/services/expense_category.dart';
+import 'package:explension/services/expense_source.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,25 +23,29 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _expenses = sl<ExpenseService>().getExpenses();
+    _expenses = sl<ExpenseService>().list();
   }
 
   /// TODO: Replace this function later with real function
   void _addRandomExpense() {
     final random = Random();
-    final sources = sl<ExpenseSourceService>().getSources();
+
+    final sources = sl<ExpenseSourceService>().list();
     final randomSource = sources[random.nextInt(sources.length)];
+
+    final categories = sl<ExpenseCategoryService>().list();
+    final randomCategory = categories[random.nextInt(categories.length)];
 
     final newExpense = Expense(
       amount: (random.nextInt(9) + 1).toDouble(),
-      categoryId: random.nextInt(10) + 1,
+      category: randomCategory,
       source: randomSource,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       note: 'Test Note',
     );
 
-    sl<ExpenseService>().addExpense(newExpense);
+    sl<ExpenseService>().create(newExpense);
 
     setState(() {
       _expenses.add(newExpense);
@@ -152,9 +157,9 @@ class _HomePageState extends State<HomePage> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           width: 100,
-          child: const Placeholder(child: Text("Expense Category")),
+          child: Icon(expense.category.icon),
         ),
-        title: Text(expense.categoryId.toString()),
+        title: Text(expense.category.name.toString()),
         subtitle: expense.note != null ? Text(expense.note!) : null,
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,

@@ -1,7 +1,7 @@
-import 'package:explension/injector.dart' as di;
-import 'package:explension/services/source.dart';
+import 'package:explension/services/expense_category.dart';
 import 'package:flutter/material.dart';
-
+import 'package:explension/injector.dart' as di;
+import 'package:explension/services/expense_source.dart';
 import 'package:explension/data/data_source/local/hive_data_source.dart';
 import 'package:explension/screens/home.dart';
 
@@ -15,7 +15,10 @@ void main() async {
   await di.setupInjector();
 
   // Init data
-  await di.sl<ExpenseSourceService>().initializeDefaultSources();
+  await di.sl<ExpenseSourceService>().initializeDefaultData();
+  print(1);
+  await di.sl<ExpenseCategoryService>().initializeDefaultData();
+  print(2);
 
   runApp(const MyApp());
 }

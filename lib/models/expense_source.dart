@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'expense_source.g.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 1)
 class ExpenseSource {
   @HiveField(0)
   final int id;
