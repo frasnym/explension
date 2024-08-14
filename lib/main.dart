@@ -1,23 +1,21 @@
-import 'package:explension/models/expense.dart';
-import 'package:explension/models/source.dart';
+import 'package:explension/injector.dart' as di;
 import 'package:explension/services/source.dart';
 import 'package:flutter/material.dart';
+
+import 'package:explension/data/data_source/local/hive_data_source.dart';
 import 'package:explension/screens/home.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
 
-  // Register the adapter
-  Hive.registerAdapter(ExpenseAdapter());
-  Hive.registerAdapter(SourceAdapter());
+  // Init data source
+  await HiveDataSource.init();
 
-  await Hive.openBox('expenses');
-  await Hive.openBox('sources');
+  // Init injector
+  await di.setupInjector();
 
-  await SourceService().initializeDefaultSources();
+  // Init data
+  await di.sl<ExpenseSourceService>().initializeDefaultSources();
 
   runApp(const MyApp());
 }

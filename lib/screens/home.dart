@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:explension/constants.dart';
+import 'package:explension/injector.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/source.dart';
@@ -14,8 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final ExpenseService _expenseService = ExpenseService();
-  final SourceService _sourceService = SourceService();
   late List<Expense> _expenses;
   String _periodSelectedValue = 'This Week';
   String _walletSelectedValue = 'Cash';
@@ -23,33 +22,25 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _expenses = _expenseService.getExpenses();
+    _expenses = sl<ExpenseService>().getExpenses();
   }
 
-  // TODO: Replace this function later with real function
+  /// TODO: Replace this function later with real function
   void _addRandomExpense() {
     final random = Random();
-
-    final amount = random.nextInt(9) + 1;
-
-    final categoryId = random.nextInt(10) + 1;
-
-    // create a list of default sources
-    final sources = _sourceService.getSources();
-
-    // select a random source from the list of default sources
-    final source = sources[random.nextInt(sources.length)];
+    final sources = sl<ExpenseSourceService>().getSources();
+    final randomSource = sources[random.nextInt(sources.length)];
 
     final newExpense = Expense(
-      amount: amount.toDouble(),
-      categoryId: categoryId,
-      source: source,
+      amount: (random.nextInt(9) + 1).toDouble(),
+      categoryId: random.nextInt(10) + 1,
+      source: randomSource,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       note: 'Test Note',
     );
 
-    _expenseService.addExpense(newExpense);
+    sl<ExpenseService>().addExpense(newExpense);
 
     setState(() {
       _expenses.add(newExpense);

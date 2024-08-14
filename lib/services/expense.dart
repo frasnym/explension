@@ -1,10 +1,11 @@
+import 'package:explension/data/data_source/local/hive_data_source.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/utils/logger.dart';
 import 'package:hive/hive.dart';
 
 class ExpenseService {
   final logger = Logger();
-  final Box _expenseBox = Hive.box('expenses');
+  final Box _expenseBox = HiveDataSource().expenseBox;
 
   Future<void> addExpense(Expense expense) async {
     const serviceName = "ExpenseService-addExpense";

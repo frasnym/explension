@@ -1,25 +1,26 @@
-import 'package:explension/models/source.dart';
+import 'package:explension/data/data_source/local/hive_data_source.dart';
+import 'package:explension/models/expense_source.dart';
 import 'package:explension/utils/logger.dart';
 import 'package:hive/hive.dart';
 
-class SourceService {
+class ExpenseSourceService {
   final logger = Logger();
-  final Box _sourceBox = Hive.box('sources');
+  final Box _expenseSourceBox = HiveDataSource().expenseSourceBox;
 
   // Add a method to initialize default sources
   Future<void> initializeDefaultSources() async {
-    if (_sourceBox.isEmpty) {
+    if (_expenseSourceBox.isEmpty) {
       final defaultSources = [
-        Source(id: 1, name: 'Cash'),
-        Source(id: 2, name: 'Gopay'),
-        Source(id: 3, name: 'OVO'),
+        ExpenseSource(id: 1, name: 'Cash'),
+        ExpenseSource(id: 2, name: 'Gopay'),
+        ExpenseSource(id: 3, name: 'OVO'),
       ];
-      await _sourceBox.addAll(defaultSources);
+      await _expenseSourceBox.addAll(defaultSources);
     }
   }
 
   // Get all sources from the Hive box
-  List<Source> getSources() {
-    return _sourceBox.values.cast<Source>().toList();
+  List<ExpenseSource> getSources() {
+    return _expenseSourceBox.values.cast<ExpenseSource>().toList();
   }
 }

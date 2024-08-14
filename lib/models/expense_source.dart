@@ -1,16 +1,16 @@
 import 'package:hive/hive.dart';
 
-part 'source.g.dart';
+part 'expense_source.g.dart';
 
 @HiveType(typeId: 2)
-class Source {
+class ExpenseSource {
   @HiveField(0)
   final int id;
 
   @HiveField(1)
   final String name;
 
-  Source({
+  ExpenseSource({
     required this.id,
     required this.name,
   });
