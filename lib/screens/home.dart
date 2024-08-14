@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:explension/constants.dart';
 import 'package:explension/models/expense.dart';
-import 'package:explension/models/source.dart';
 import 'package:explension/services/expense.dart';
+import 'package:explension/services/source.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<Expense> _expenses = [];
   final ExpenseService _expenseService = ExpenseService();
+  final SourceService _sourceService = SourceService();
   String _periodSelectedValue = 'This Week';
   String _walletSelectedValue = 'Cash';
 
@@ -28,17 +29,10 @@ class _HomePageState extends State<HomePage> {
     final categoryId = random.nextInt(10) + 1;
 
     // create a list of default sources
-    final defaultSources = [
-      Source(
-        id: 1,
-        name: 'Cash',
-      ),
-      Source(id: 2, name: 'Gopay'),
-      Source(id: 3, name: 'OVO'),
-    ];
+    final sources = _sourceService.getSources();
 
     // select a random source from the list of default sources
-    final source = defaultSources[random.nextInt(defaultSources.length)];
+    final source = sources[random.nextInt(sources.length)];
 
     final newExpense = Expense(
       amount: amount.toDouble(),
@@ -46,7 +40,7 @@ class _HomePageState extends State<HomePage> {
       source: source,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
-      note: '',
+      note: 'Test Note',
     );
 
     _expenseService.addExpense(newExpense);
