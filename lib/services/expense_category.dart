@@ -23,7 +23,12 @@ class ExpenseCategoryService {
               icon: Icons.local_shipping,
               color: Colors.yellow.value),
           ExpenseCategory(
-              id: 2, name: 'Home', icon: Icons.home, color: Colors.brown.value),
+              id: 3, name: 'Home', icon: Icons.home, color: Colors.brown.value),
+          ExpenseCategory(id: 4, parentId: 1, name: "Breakfast"),
+          ExpenseCategory(id: 5, parentId: 1, name: "Lunch"),
+          ExpenseCategory(id: 6, parentId: 1, name: "Dinner"),
+          ExpenseCategory(id: 7, parentId: 2, name: "Parking"),
+          ExpenseCategory(id: 8, parentId: 2, name: "Gasoline"),
         ]);
       }
     } catch (e) {

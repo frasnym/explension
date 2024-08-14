@@ -6,6 +6,7 @@ import 'package:explension/models/expense.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/expense_category.dart';
 import 'package:explension/services/expense_source.dart';
+import 'package:explension/services/expense_sub_category.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,6 +45,15 @@ class _HomePageState extends State<HomePage> {
       updatedAt: DateTime.now(),
       note: 'Test Note',
     );
+
+    final subCategories =
+        sl<ExpenseSubCategoryService>().listByParentId(randomCategory.id);
+    if (subCategories.isNotEmpty) {
+      final randomSubCategory =
+          subCategories[random.nextInt(subCategories.length)];
+
+      newExpense.subCategory = randomSubCategory;
+    }
 
     sl<ExpenseService>().create(newExpense);
 
@@ -168,7 +178,8 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white,
           ),
         ),
-        title: Text(expense.category.name.toString()),
+        title: Text(
+            "${expense.category.name}${expense.subCategory != null ? ' - ${expense.subCategory!.name}' : ''}"),
         subtitle: expense.note != null ? Text(expense.note!) : null,
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
