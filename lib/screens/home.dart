@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:explension/constants.dart';
 import 'package:explension/models/expense.dart';
+import 'package:explension/models/source.dart';
 import 'package:explension/services/expense.dart';
 import 'package:flutter/material.dart';
 
@@ -22,19 +23,27 @@ class _HomePageState extends State<HomePage> {
   void _addRandomExpense() {
     final random = Random();
 
-    // create random double amount between 0 and 1000000
-    final amount = random.nextDouble() * 1000000;
+    final amount = random.nextInt(9) + 1;
 
-    // create random categoryId between 1 and 10
     final categoryId = random.nextInt(10) + 1;
 
-    // create random sourceId between 1 and 5
-    final sourceId = random.nextInt(5) + 1;
+    // create a list of default sources
+    final defaultSources = [
+      Source(
+        id: 1,
+        name: 'Cash',
+      ),
+      Source(id: 2, name: 'Gopay'),
+      Source(id: 3, name: 'OVO'),
+    ];
+
+    // select a random source from the list of default sources
+    final source = defaultSources[random.nextInt(defaultSources.length)];
 
     final newExpense = Expense(
-      amount: amount,
+      amount: amount.toDouble(),
       categoryId: categoryId,
-      sourceId: sourceId,
+      source: source,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       note: '',
@@ -147,7 +156,13 @@ class _HomePageState extends State<HomePage> {
         child: const Placeholder(child: Text("Expense Category")),
       ),
       title: Text(expense.categoryId.toString()),
-      subtitle: Text(expense.subCategoryId.toString()),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(expense.source.name),
+          Text(expense.note ?? ""),
+        ],
+      ),
       trailing: Text(
         '\$${(expense.amount).toStringAsFixed(2)}',
       ),

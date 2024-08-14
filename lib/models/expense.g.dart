@@ -20,7 +20,7 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       amount: fields[1] as double,
       categoryId: fields[2] as int,
       subCategoryId: fields[3] as int?,
-      sourceId: fields[4] as int,
+      source: fields[4] as Source,
       createdAt: fields[5] as DateTime,
       updatedAt: fields[6] as DateTime,
       note: fields[7] as String?,
@@ -38,7 +38,7 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       ..writeByte(3)
       ..write(obj.subCategoryId)
       ..writeByte(4)
-      ..write(obj.sourceId)
+      ..write(obj.source)
       ..writeByte(5)
       ..write(obj.createdAt)
       ..writeByte(6)

@@ -1,4 +1,6 @@
 import 'package:explension/models/expense.dart';
+import 'package:explension/models/source.dart';
+import 'package:explension/services/source.dart';
 import 'package:flutter/material.dart';
 import 'package:explension/screens/home.dart';
 import 'package:hive/hive.dart';
@@ -10,8 +12,13 @@ void main() async {
 
   // Register the adapter
   Hive.registerAdapter(ExpenseAdapter());
+  Hive.registerAdapter(SourceAdapter());
 
   await Hive.openBox('expenses');
+  await Hive.openBox('sources');
+
+  await SourceService().initializeDefaultSources();
+
   runApp(const MyApp());
 }
 

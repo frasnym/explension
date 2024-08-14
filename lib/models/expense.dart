@@ -1,3 +1,4 @@
+import 'package:explension/models/source.dart';
 import 'package:hive/hive.dart';
 
 part 'expense.g.dart';
@@ -11,7 +12,7 @@ class Expense {
   @HiveField(3)
   int? subCategoryId;
   @HiveField(4)
-  final int sourceId;
+  final Source source;
   @HiveField(5)
   final DateTime createdAt;
   @HiveField(6)
@@ -23,7 +24,7 @@ class Expense {
     required this.amount,
     required this.categoryId,
     this.subCategoryId,
-    required this.sourceId,
+    required this.source,
     required this.createdAt,
     required this.updatedAt,
     this.note,
