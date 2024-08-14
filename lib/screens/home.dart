@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                 // Get the reversed list of expenses
                 final expenses =
                     _expenseService.getExpenses().reversed.toList();
-                return _buildTransactionTile(expenses[index]);
+                return _buildTransactionTile(expenses[index], index);
               },
               childCount: _expenseService.getExpenses().length,
             ),
@@ -142,23 +142,31 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildTransactionTile(Expense expense) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        width: 100,
-        child: const Placeholder(child: Text("Expense Category")),
-      ),
-      title: Text(expense.categoryId.toString()),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(expense.source.name),
-          Text(expense.note ?? ""),
-        ],
-      ),
-      trailing: Text(
-        '\$${(expense.amount).toStringAsFixed(2)}',
+  Widget _buildTransactionTile(Expense expense, int index) {
+    final backgroundColor = index % 2 == 0 ? Colors.grey[200] : Colors.white;
+
+    return Container(
+      color: backgroundColor,
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          width: 100,
+          child: const Placeholder(child: Text("Expense Category")),
+        ),
+        title: Text(expense.categoryId.toString()),
+        subtitle: expense.note != null ? Text(expense.note!) : null,
+        trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Rp ${(expense.amount).toStringAsFixed(2)}',
+            ),
+            Text(
+              expense.source.name,
+            ),
+          ],
+        ),
       ),
     );
   }
