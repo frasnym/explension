@@ -12,9 +12,18 @@ class ExpenseCategoryService {
     try {
       if (_expenseCategoryBox.isEmpty) {
         await _expenseCategoryBox.addAll([
-          ExpenseCategory(id: 1, icon: Icons.restaurant, name: 'Food & Drink'),
-          ExpenseCategory(id: 2, icon: Icons.local_shipping, name: 'Transport'),
-          ExpenseCategory(id: 2, icon: Icons.home, name: 'Home'),
+          ExpenseCategory(
+              id: 1,
+              name: 'Food & Drink',
+              icon: Icons.restaurant,
+              color: Colors.orange.value),
+          ExpenseCategory(
+              id: 2,
+              name: 'Transport',
+              icon: Icons.local_shipping,
+              color: Colors.yellow.value),
+          ExpenseCategory(
+              id: 2, name: 'Home', icon: Icons.home, color: Colors.brown.value),
         ]);
       }
     } catch (e) {

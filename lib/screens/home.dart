@@ -156,8 +156,17 @@ class _HomePageState extends State<HomePage> {
       child: ListTile(
         leading: Container(
           padding: const EdgeInsets.all(8),
-          width: 100,
-          child: Icon(expense.category.icon),
+          width: 50,
+          decoration: BoxDecoration(
+            color: expense.category.color != null
+                ? Color(expense.category.color!)
+                : null,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            expense.category.icon,
+            color: Colors.white,
+          ),
         ),
         title: Text(expense.category.name.toString()),
         subtitle: expense.note != null ? Text(expense.note!) : null,

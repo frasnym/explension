@@ -20,13 +20,14 @@ class ExpenseCategoryAdapter extends TypeAdapter<ExpenseCategory> {
       id: fields[0] as int,
       name: fields[1] as String,
       parentId: fields[3] as int?,
+      color: fields[4] as int?,
     )..iconCodePoint = fields[2] as int?;
   }
 
   @override
   void write(BinaryWriter writer, ExpenseCategory obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -34,7 +35,9 @@ class ExpenseCategoryAdapter extends TypeAdapter<ExpenseCategory> {
       ..writeByte(2)
       ..write(obj.iconCodePoint)
       ..writeByte(3)
-      ..write(obj.parentId);
+      ..write(obj.parentId)
+      ..writeByte(4)
+      ..write(obj.color);
   }
 
   @override

@@ -16,9 +16,7 @@ void main() async {
 
   // Init data
   await di.sl<ExpenseSourceService>().initializeDefaultData();
-  print(1);
   await di.sl<ExpenseCategoryService>().initializeDefaultData();
-  print(2);
 
   runApp(const MyApp());
 }

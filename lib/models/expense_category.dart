@@ -17,14 +17,20 @@ class ExpenseCategory extends HiveObject {
   @HiveField(3)
   int? parentId;
 
+  @HiveField(4)
+  int? color;
+
   ExpenseCategory({
     required this.id,
     required this.name,
     IconData? icon,
     this.parentId,
+    this.color,
   }) : iconCodePoint = icon?.codePoint;
 
   IconData? get icon => iconCodePoint == null
       ? null
       : IconData(iconCodePoint!, fontFamily: 'MaterialIcons');
+
+  Color? get colorValue => color == null ? null : Color(color!);
 }
