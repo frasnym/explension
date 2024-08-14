@@ -14,11 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Expense> _expenses = [];
   final ExpenseService _expenseService = ExpenseService();
   final SourceService _sourceService = SourceService();
+  late List<Expense> _expenses;
   String _periodSelectedValue = 'This Week';
   String _walletSelectedValue = 'Cash';
+
+  @override
+  void initState() {
+    super.initState();
+    _expenses = _expenseService.getExpenses();
+  }
 
   // TODO: Replace this function later with real function
   void _addRandomExpense() {
@@ -52,12 +58,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate the sum of the amounts of all expenses
+    final totalAmount =
+        _expenses.fold(0.0, (sum, expense) => sum + expense.amount);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             title: Text(
-              "IDR 30.000.000",
+              totalAmount.toString(),
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             expandedHeight: 200.0,
@@ -98,12 +108,12 @@ class _HomePageState extends State<HomePage> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
+                final expenses = _expenses.reversed.toList();
+
                 // Get the reversed list of expenses
-                final expenses =
-                    _expenseService.getExpenses().reversed.toList();
                 return _buildTransactionTile(expenses[index], index);
               },
-              childCount: _expenseService.getExpenses().length,
+              childCount: _expenses.length,
             ),
           ),
         ],
