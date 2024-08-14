@@ -3,8 +3,10 @@ import 'package:explension/models/expense_source.dart';
 import 'package:explension/utils/logger.dart';
 
 class ExpenseSourceService {
-  final logger = Logger();
+  final Logger logger;
   final _expenseSourceBox = HiveDataSource.expenseSourceBox;
+
+  ExpenseSourceService(this.logger);
 
   // Add a method to initialize default sources
   Future<void> initializeDefaultData() async {

@@ -3,18 +3,21 @@ import 'package:explension/models/expense.dart';
 import 'package:explension/utils/logger.dart';
 
 class ExpenseService {
-  final logger = Logger();
+  final String serviceName = "ExpenseService";
+  final Logger logger;
   final _expenseBox = HiveDataSource.expenseBox;
 
+  ExpenseService(this.logger);
+
   Future<void> create(Expense expense) async {
-    const serviceName = "ExpenseService-addExpense";
+    const funcName = "create";
 
     try {
       await _expenseBox.add(expense);
     } catch (e) {
-      logger.logError(serviceName, e);
+      logger.error(serviceName, funcName, e);
     } finally {
-      logger.logService(serviceName, expense.toString());
+      logger.info(serviceName, funcName, expense.toJson().toString());
     }
   }
 

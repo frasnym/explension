@@ -30,4 +30,16 @@ class Expense {
     required this.updatedAt,
     this.note,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'amount': amount,
+      'category': category.toJson(),
+      'subCategory': subCategory?.toJson(),
+      'source': source.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'note': note,
+    };
+  }
 }

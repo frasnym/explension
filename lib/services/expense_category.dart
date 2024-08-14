@@ -4,11 +4,16 @@ import 'package:explension/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseCategoryService {
-  final logger = Logger();
+  final String serviceName = "ExpenseCategoryService";
+  final Logger logger;
   final _expenseCategoryBox = HiveDataSource.expenseCategoryBox;
+
+  ExpenseCategoryService(this.logger);
 
   // Add a method to initialize default data
   Future<void> initializeDefaultData() async {
+    const funcName = "initializeDefaultData";
+
     try {
       if (_expenseCategoryBox.isEmpty) {
         await _expenseCategoryBox.addAll([
@@ -32,7 +37,9 @@ class ExpenseCategoryService {
         ]);
       }
     } catch (e) {
-      print(e); // TODO: use logger
+      logger.error(serviceName, funcName, e);
+    } finally {
+      logger.info(serviceName, funcName, "Default data initialized");
     }
   }
 

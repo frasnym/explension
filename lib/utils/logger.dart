@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 
 class Logger {
-  logService(String serviceName, String message) {
+  info(String serviceName, String funcName, String message) {
     if (kDebugMode) {
       print("[$serviceName] called; $message");
     }
   }
 
-  logError(String serviceName, Object err) {
+  error(String serviceName, String funcName, Object err) {
     if (kDebugMode) {
-      print("[$serviceName] err; $err");
+      print("[$serviceName-$funcName] err; $err");
     }
   }
 }

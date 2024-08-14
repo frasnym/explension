@@ -33,4 +33,14 @@ class ExpenseCategory extends HiveObject {
       : IconData(iconCodePoint!, fontFamily: 'MaterialIcons');
 
   Color? get colorValue => color == null ? null : Color(color!);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'iconCodePoint': iconCodePoint,
+      'parentId': parentId,
+      'color': color,
+    };
+  }
 }

@@ -3,8 +3,10 @@ import 'package:explension/models/expense_category.dart';
 import 'package:explension/utils/logger.dart';
 
 class ExpenseSubCategoryService {
-  final logger = Logger();
+  final Logger logger;
   final _expenseCategoryBox = HiveDataSource.expenseCategoryBox;
+
+  ExpenseSubCategoryService(this.logger);
 
   List<ExpenseCategory> listByParentId(int parentId) {
     return _expenseCategoryBox.values
