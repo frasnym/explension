@@ -40,7 +40,7 @@ class TransactionTile extends StatelessWidget {
               'Rp ${(expense.amount).toStringAsFixed(2)}',
             ),
             Text(
-              expense.source.name,
+              expense.wallet.name,
             ),
           ],
         ),

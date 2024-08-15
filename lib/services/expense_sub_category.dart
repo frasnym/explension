@@ -1,16 +1,16 @@
 import 'package:explension/data/data_source/local/hive_data_source.dart';
-import 'package:explension/models/expense_category.dart';
+import 'package:explension/models/category.dart';
 import 'package:explension/utils/logger.dart';
 
-class ExpenseSubCategoryService {
+class SubCategoryService {
   final Logger logger;
-  final _expenseCategoryBox = HiveDataSource.expenseCategoryBox;
+  final _categoryBox = HiveDataSource.categoryBox;
 
-  ExpenseSubCategoryService(this.logger);
+  SubCategoryService(this.logger);
 
-  List<ExpenseCategory> listByParentId(int parentId) {
-    return _expenseCategoryBox.values
-        .cast<ExpenseCategory>()
+  List<Category> listByParentId(int parentId) {
+    return _categoryBox.values
+        .cast<Category>()
         .where((c) => c.parentId == parentId)
         .toList();
   }

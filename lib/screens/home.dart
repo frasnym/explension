@@ -1,5 +1,5 @@
 import 'package:explension/models/expense.dart';
-import 'package:explension/models/expense_source.dart';
+import 'package:explension/models/wallet.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/expense_source.dart';
 import 'package:explension/utils/random_expense_generator.dart';
@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   final ExpenseService expenseService;
-  final ExpenseSourceService expenseSourceService;
+  final WalletService walletService;
 
   const HomePage({
     super.key,
     required this.expenseService,
-    required this.expenseSourceService,
+    required this.walletService,
   });
 
   @override
@@ -25,27 +25,27 @@ class _HomePageState extends State<HomePage> {
   // Stream to listen for changes in the list of expenses
   late Stream<List<Expense>> _expensesStream;
 
-  // List of all expense sources
-  late List<ExpenseSource> _expenseSources;
+  // List of all wallet
+  late List<Wallet> _wallets;
 
   // Currently selected period for the expense filter
   String _periodSelectedValue = 'This Week';
 
-  // Currently selected source for the expense filter
-  String _sourceExpenseFilterSelectedValue = "All";
+  // Currently selected wallet for the expense filter
+  String _walletFilterSelectedValue = "All";
 
   @override
   void initState() {
     super.initState();
     // Initialize the expenses stream and the list of expense sources
     _expensesStream = widget.expenseService.stream();
-    _expenseSources = widget.expenseSourceService.list();
+    _wallets = widget.walletService.list();
   }
 
   // Method to add a random expense for testing purposes
   void _addExpense() {
     // TODO: Replace later with actual expense creation
-    widget.expenseService.create(generateRandomExpense(_expenseSources));
+    widget.expenseService.create(generateRandomExpense());
   }
 
   @override
@@ -57,10 +57,10 @@ class _HomePageState extends State<HomePage> {
         if (snapshot.hasData) {
           final expenses = snapshot.data!;
           final filteredExpenses = expenses.where((expense) {
-            if (_sourceExpenseFilterSelectedValue == "All") {
+            if (_walletFilterSelectedValue == "All") {
               return true;
             } else {
-              return expense.source.name == _sourceExpenseFilterSelectedValue;
+              return expense.wallet.name == _walletFilterSelectedValue;
             }
           }).toList();
 
@@ -96,16 +96,14 @@ class _HomePageState extends State<HomePage> {
                             ),
                             const SizedBox(width: 20),
                             CustomDropdown(
-                                value: _sourceExpenseFilterSelectedValue,
+                                value: _walletFilterSelectedValue,
                                 onChanged: (newValue) {
                                   setState(() {
-                                    _sourceExpenseFilterSelectedValue =
-                                        newValue!;
+                                    _walletFilterSelectedValue = newValue!;
                                   });
                                 },
                                 items: ["All"]
-                                    .followedBy(
-                                        _expenseSources.map((e) => e.name))
+                                    .followedBy(_wallets.map((e) => e.name))
                                     .toList())
                           ],
                         ),

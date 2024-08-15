@@ -1,5 +1,5 @@
 import 'package:explension/services/expense.dart';
-import 'package:explension/services/expense_category.dart';
+import 'package:explension/services/category.dart';
 import 'package:explension/services/expense_source.dart';
 import 'package:explension/services/expense_sub_category.dart';
 import 'package:explension/utils/logger.dart';
@@ -12,7 +12,7 @@ Future<void> setupInjector() async {
   final logger = Logger();
 
   sl.registerLazySingleton(() => ExpenseService(logger));
-  sl.registerLazySingleton(() => ExpenseSourceService(logger));
-  sl.registerLazySingleton(() => ExpenseCategoryService(logger));
-  sl.registerLazySingleton(() => ExpenseSubCategoryService(logger));
+  sl.registerLazySingleton(() => WalletService(logger));
+  sl.registerLazySingleton(() => CategoryService(logger));
+  sl.registerLazySingleton(() => SubCategoryService(logger));
 }

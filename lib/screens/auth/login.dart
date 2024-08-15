@@ -87,8 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                               MaterialPageRoute(builder: (context) {
                                 return HomePage(
                                   expenseService: sl<ExpenseService>(),
-                                  expenseSourceService:
-                                      sl<ExpenseSourceService>(),
+                                  walletService: sl<WalletService>(),
                                 );
                               }),
                             );

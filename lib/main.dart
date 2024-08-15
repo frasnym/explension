@@ -1,5 +1,5 @@
 import 'package:explension/services/expense.dart';
-import 'package:explension/services/expense_category.dart';
+import 'package:explension/services/category.dart';
 import 'package:flutter/material.dart';
 import 'package:explension/injector.dart';
 import 'package:explension/services/expense_source.dart';
@@ -16,8 +16,8 @@ void main() async {
   await setupInjector();
 
   // Init data
-  await sl<ExpenseSourceService>().initializeDefaultData();
-  await sl<ExpenseCategoryService>().initializeDefaultData();
+  await sl<WalletService>().initializeDefaultData();
+  await sl<CategoryService>().initializeDefaultData();
 
   runApp(const MyApp());
 }
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       home: HomePage(
         expenseService: sl<ExpenseService>(),
-        expenseSourceService: sl<ExpenseSourceService>(),
+        walletService: sl<WalletService>(),
       ),
     );
   }

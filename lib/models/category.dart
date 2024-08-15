@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-part 'expense_category.g.dart';
+part 'category.g.dart';
 
 @HiveType(typeId: 3)
-class ExpenseCategory extends HiveObject {
+class Category extends HiveObject {
   @HiveField(0)
   int id;
 
@@ -20,7 +20,7 @@ class ExpenseCategory extends HiveObject {
   @HiveField(4)
   int? color;
 
-  ExpenseCategory({
+  Category({
     required this.id,
     required this.name,
     IconData? icon,

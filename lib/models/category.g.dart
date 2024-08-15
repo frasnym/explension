@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'expense_category.dart';
+part of 'category.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ExpenseCategoryAdapter extends TypeAdapter<ExpenseCategory> {
+class CategoryAdapter extends TypeAdapter<Category> {
   @override
   final int typeId = 3;
 
   @override
-  ExpenseCategory read(BinaryReader reader) {
+  Category read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ExpenseCategory(
+    return Category(
       id: fields[0] as int,
       name: fields[1] as String,
       parentId: fields[3] as int?,
@@ -25,7 +25,7 @@ class ExpenseCategoryAdapter extends TypeAdapter<ExpenseCategory> {
   }
 
   @override
-  void write(BinaryWriter writer, ExpenseCategory obj) {
+  void write(BinaryWriter writer, Category obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -46,7 +46,7 @@ class ExpenseCategoryAdapter extends TypeAdapter<ExpenseCategory> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ExpenseCategoryAdapter &&
+      other is CategoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

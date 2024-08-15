@@ -18,9 +18,9 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
     };
     return Expense(
       amount: fields[1] as double,
-      category: fields[2] as ExpenseCategory,
-      subCategory: fields[3] as ExpenseCategory?,
-      source: fields[4] as ExpenseSource,
+      category: fields[2] as Category,
+      subCategory: fields[3] as Category?,
+      wallet: fields[4] as Wallet,
       createdAt: fields[5] as DateTime,
       updatedAt: fields[6] as DateTime,
       note: fields[7] as String?,
@@ -38,7 +38,7 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       ..writeByte(3)
       ..write(obj.subCategory)
       ..writeByte(4)
-      ..write(obj.source)
+      ..write(obj.wallet)
       ..writeByte(5)
       ..write(obj.createdAt)
       ..writeByte(6)

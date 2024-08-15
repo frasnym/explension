@@ -1,5 +1,5 @@
-import 'package:explension/models/expense_category.dart';
-import 'package:explension/models/expense_source.dart';
+import 'package:explension/models/category.dart';
+import 'package:explension/models/wallet.dart';
 import 'package:hive/hive.dart';
 
 part 'expense.g.dart';
@@ -9,11 +9,11 @@ class Expense {
   @HiveField(1)
   final double amount;
   @HiveField(2)
-  final ExpenseCategory category;
+  final Category category;
   @HiveField(3)
-  ExpenseCategory? subCategory;
+  Category? subCategory;
   @HiveField(4)
-  final ExpenseSource source;
+  final Wallet wallet;
   @HiveField(5)
   final DateTime createdAt;
   @HiveField(6)
@@ -25,7 +25,7 @@ class Expense {
     required this.amount,
     required this.category,
     this.subCategory,
-    required this.source,
+    required this.wallet,
     required this.createdAt,
     required this.updatedAt,
     this.note,
@@ -36,7 +36,7 @@ class Expense {
       'amount': amount,
       'category': category.toJson(),
       'subCategory': subCategory?.toJson(),
-      'source': source.toJson(),
+      'wallet': wallet.toJson(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'note': note,
