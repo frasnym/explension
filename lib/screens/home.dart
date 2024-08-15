@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:explension/injector.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/expense_source.dart';
 import 'package:explension/services/expense.dart';
@@ -12,33 +11,52 @@ import 'package:explension/widgets/home/transaction_tile.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final ExpenseService expenseService;
+  final ExpenseSourceService expenseSourceService;
+  final ExpenseCategoryService expenseCategoryService;
+  final ExpenseSubCategoryService expenseSubCategoryService;
+
+  const HomePage(
+      {super.key,
+      required this.expenseService,
+      required this.expenseSourceService,
+      required this.expenseCategoryService,
+      required this.expenseSubCategoryService});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  // Stream to listen for changes in the list of expenses
   late Stream<List<Expense>> _expensesStream;
+
+  // List of all expense sources
   late List<ExpenseSource> _expenseSources;
+
+  // Currently selected period for the expense filter
   String _periodSelectedValue = 'This Week';
+
+  // Currently selected source for the expense filter
   String _sourceExpenseFilterSelectedValue = "All";
 
   @override
   void initState() {
     super.initState();
-    _expensesStream = sl<ExpenseService>().stream();
-    _expenseSources = sl<ExpenseSourceService>().list();
+    // Initialize the expenses stream and the list of expense sources
+    _expensesStream = widget.expenseService.stream();
+    _expenseSources = widget.expenseSourceService.list();
   }
 
-  /// TODO: Replace this function later with real function
+  // Method to add a random expense for testing purposes
+  // TODO: Replace later with actual expense creation
   void _addRandomExpense() {
     final random = Random();
 
     final randomSource =
         _expenseSources[random.nextInt(_expenseSources.length)];
 
-    final categories = sl<ExpenseCategoryService>().list();
+    final categories = widget.expenseCategoryService.list();
     final randomCategory = categories[random.nextInt(categories.length)];
 
     final newExpense = Expense(
@@ -51,7 +69,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     final subCategories =
-        sl<ExpenseSubCategoryService>().listByParentId(randomCategory.id);
+        widget.expenseSubCategoryService.listByParentId(randomCategory.id);
     if (subCategories.isNotEmpty) {
       final randomSubCategory =
           subCategories[random.nextInt(subCategories.length)];
@@ -59,14 +77,14 @@ class _HomePageState extends State<HomePage> {
       newExpense.subCategory = randomSubCategory;
     }
 
-    sl<ExpenseService>().create(newExpense);
+    widget.expenseService.create(newExpense);
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Expense>>(
       stream: _expensesStream,
-      initialData: sl<ExpenseService>().list(),
+      initialData: widget.expenseService.list(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final expenses = snapshot.data!;

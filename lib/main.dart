@@ -1,6 +1,8 @@
+import 'package:explension/services/expense.dart';
 import 'package:explension/services/expense_category.dart';
+import 'package:explension/services/expense_sub_category.dart';
 import 'package:flutter/material.dart';
-import 'package:explension/injector.dart' as di;
+import 'package:explension/injector.dart';
 import 'package:explension/services/expense_source.dart';
 import 'package:explension/data/data_source/local/hive_data_source.dart';
 import 'package:explension/screens/home.dart';
@@ -12,11 +14,11 @@ void main() async {
   await HiveDataSource.init();
 
   // Init injector
-  await di.setupInjector();
+  await setupInjector();
 
   // Init data
-  await di.sl<ExpenseSourceService>().initializeDefaultData();
-  await di.sl<ExpenseCategoryService>().initializeDefaultData();
+  await sl<ExpenseSourceService>().initializeDefaultData();
+  await sl<ExpenseCategoryService>().initializeDefaultData();
 
   runApp(const MyApp());
 }
@@ -53,7 +55,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: HomePage(
+        expenseService: sl<ExpenseService>(),
+        expenseCategoryService: sl<ExpenseCategoryService>(),
+        expenseSourceService: sl<ExpenseSourceService>(),
+        expenseSubCategoryService: sl<ExpenseSubCategoryService>(),
+      ),
     );
   }
 }
