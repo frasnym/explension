@@ -64,91 +64,70 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            title: StreamBuilder<List<Expense>>(
-              stream: _expensesStream,
-              initialData: sl<ExpenseService>().list(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final expenses = snapshot.data!;
-                  final filteredExpenses = expenses.where((expense) {
-                    if (_sourceExpenseFilterSelectedValue == "All") {
-                      return true;
-                    } else {
-                      return expense.source.name ==
-                          _sourceExpenseFilterSelectedValue;
-                    }
-                  }).toList();
+    return StreamBuilder<List<Expense>>(
+      stream: _expensesStream,
+      initialData: sl<ExpenseService>().list(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final expenses = snapshot.data!;
+          final filteredExpenses = expenses.where((expense) {
+            if (_sourceExpenseFilterSelectedValue == "All") {
+              return true;
+            } else {
+              return expense.source.name == _sourceExpenseFilterSelectedValue;
+            }
+          }).toList();
 
-                  final totalAmount = filteredExpenses.fold(
-                      0.0, (sum, expense) => sum + expense.amount);
+          final totalAmount = filteredExpenses.fold(
+              0.0, (sum, expense) => sum + expense.amount);
 
-                  return Text(
+          return Scaffold(
+            body: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  title: Text(
                     totalAmount.toString(),
                     style: Theme.of(context).textTheme.headlineLarge,
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
-            ),
-            expandedHeight: 200.0,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CustomDropdown(
-                        items: ['This Week', 'This Month', 'This Year'],
-                        onChanged: (newValue) {
-                          setState(() {
-                            _periodSelectedValue = newValue!;
-                          });
-                        },
-                        value: _periodSelectedValue,
-                      ),
-                      const SizedBox(width: 20),
-                      CustomDropdown(
-                          value: _sourceExpenseFilterSelectedValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              _sourceExpenseFilterSelectedValue = newValue!;
-                            });
-                          },
-                          items: ["All"]
-                              .followedBy(_expenseSources.map((e) => e.name))
-                              .toList())
-                    ],
                   ),
-                ],
-              ),
-            ),
-          ),
-          StreamBuilder(
-            stream: _expensesStream,
-            initialData: sl<ExpenseService>().list(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final expenses = snapshot.data!;
-                final filteredExpenses = expenses.where((expense) {
-                  if (_sourceExpenseFilterSelectedValue == "All") {
-                    return true;
-                  } else {
-                    return expense.source.name ==
-                        _sourceExpenseFilterSelectedValue;
-                  }
-                }).toList();
-
-                return SliverList(
+                  expandedHeight: 200.0,
+                  floating: false,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CustomDropdown(
+                              items: ['This Week', 'This Month', 'This Year'],
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _periodSelectedValue = newValue!;
+                                });
+                              },
+                              value: _periodSelectedValue,
+                            ),
+                            const SizedBox(width: 20),
+                            CustomDropdown(
+                                value: _sourceExpenseFilterSelectedValue,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _sourceExpenseFilterSelectedValue =
+                                        newValue!;
+                                  });
+                                },
+                                items: ["All"]
+                                    .followedBy(
+                                        _expenseSources.map((e) => e.name))
+                                    .toList())
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
                       return TransactionTile(
@@ -156,27 +135,23 @@ class _HomePageState extends State<HomePage> {
                     },
                     childCount: filteredExpenses.length,
                   ),
-                );
-              } else if (snapshot.hasError) {
-                return SliverToBoxAdapter(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else {
-                return const SliverToBoxAdapter(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _addRandomExpense();
-        },
-        tooltip: 'Add Expense',
-        child: const Icon(Icons.add),
-      ),
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                _addRandomExpense();
+              },
+              tooltip: 'Add Expense',
+              child: const Icon(Icons.add),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }
