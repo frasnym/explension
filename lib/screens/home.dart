@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/expense_source.dart';
 import 'package:explension/services/expense.dart';
-import 'package:explension/services/expense_category.dart';
 import 'package:explension/services/expense_source.dart';
-import 'package:explension/services/expense_sub_category.dart';
+import 'package:explension/utils/random_expense_generator.dart';
 import 'package:explension/widgets/home/custom_dropdown.dart';
 import 'package:explension/widgets/home/transaction_tile.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +10,12 @@ import 'package:flutter/material.dart';
 class HomePage extends StatefulWidget {
   final ExpenseService expenseService;
   final ExpenseSourceService expenseSourceService;
-  final ExpenseCategoryService expenseCategoryService;
-  final ExpenseSubCategoryService expenseSubCategoryService;
 
-  const HomePage(
-      {super.key,
-      required this.expenseService,
-      required this.expenseSourceService,
-      required this.expenseCategoryService,
-      required this.expenseSubCategoryService});
+  const HomePage({
+    super.key,
+    required this.expenseService,
+    required this.expenseSourceService,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -49,35 +43,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Method to add a random expense for testing purposes
-  // TODO: Replace later with actual expense creation
-  void _addRandomExpense() {
-    final random = Random();
-
-    final randomSource =
-        _expenseSources[random.nextInt(_expenseSources.length)];
-
-    final categories = widget.expenseCategoryService.list();
-    final randomCategory = categories[random.nextInt(categories.length)];
-
-    final newExpense = Expense(
-      amount: (random.nextInt(9) + 1).toDouble(),
-      category: randomCategory,
-      source: randomSource,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      note: 'Test Note',
-    );
-
-    final subCategories =
-        widget.expenseSubCategoryService.listByParentId(randomCategory.id);
-    if (subCategories.isNotEmpty) {
-      final randomSubCategory =
-          subCategories[random.nextInt(subCategories.length)];
-
-      newExpense.subCategory = randomSubCategory;
-    }
-
-    widget.expenseService.create(newExpense);
+  void _addExpense() {
+    // TODO: Replace later with actual expense creation
+    widget.expenseService.create(generateRandomExpense(_expenseSources));
   }
 
   @override
@@ -158,7 +126,7 @@ class _HomePageState extends State<HomePage> {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                _addRandomExpense();
+                _addExpense();
               },
               tooltip: 'Add Expense',
               child: const Icon(Icons.add),

@@ -2,9 +2,7 @@ import 'package:explension/constants.dart';
 import 'package:explension/injector.dart';
 import 'package:explension/screens/home.dart';
 import 'package:explension/services/expense.dart';
-import 'package:explension/services/expense_category.dart';
 import 'package:explension/services/expense_source.dart';
-import 'package:explension/services/expense_sub_category.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -89,12 +87,8 @@ class _LoginPageState extends State<LoginPage> {
                               MaterialPageRoute(builder: (context) {
                                 return HomePage(
                                   expenseService: sl<ExpenseService>(),
-                                  expenseCategoryService:
-                                      sl<ExpenseCategoryService>(),
                                   expenseSourceService:
                                       sl<ExpenseSourceService>(),
-                                  expenseSubCategoryService:
-                                      sl<ExpenseSubCategoryService>(),
                                 );
                               }),
                             );
