@@ -18,6 +18,7 @@ void main() async {
   // Init data
   await sl<WalletService>().initializeDefaultData();
   await sl<CategoryService>().initializeDefaultData();
+  await sl<ExpenseService>().initializeDefaultData();
 
   runApp(const MyApp());
 }

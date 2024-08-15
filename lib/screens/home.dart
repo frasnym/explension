@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   late List<Wallet> _wallets;
 
   // Currently selected period for the expense filter
-  String _periodSelectedValue = 'This Week';
+  String _periodSelectedValue = 'All';
 
   // Currently selected wallet for the expense filter
   String _walletFilterSelectedValue = "All";
@@ -57,6 +57,24 @@ class _HomePageState extends State<HomePage> {
         if (snapshot.hasData) {
           final expenses = snapshot.data!;
           final filteredExpenses = expenses.where((expense) {
+            if (_periodSelectedValue == "All") {
+              return true;
+            } else if (_periodSelectedValue == "This Week") {
+              final now = DateTime.now();
+              final weekStart = now.subtract(Duration(days: now.weekday - 1));
+              return expense.createdAt.isAfter(weekStart);
+            } else if (_periodSelectedValue == "This Month") {
+              final now = DateTime.now();
+              final monthStart = DateTime(now.year, now.month, 1);
+              return expense.createdAt.isAfter(monthStart);
+            } else if (_periodSelectedValue == "This Year") {
+              final now = DateTime.now();
+              final yearStart = DateTime(now.year, 1, 1);
+              return expense.createdAt.isAfter(yearStart);
+            } else {
+              return true;
+            }
+          }).where((expense) {
             if (_walletFilterSelectedValue == "All") {
               return true;
             } else {
@@ -86,7 +104,12 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             CustomDropdown(
-                              items: ['This Week', 'This Month', 'This Year'],
+                              items: const [
+                                'All',
+                                'This Week',
+                                'This Month',
+                                'This Year'
+                              ],
                               onChanged: (newValue) {
                                 setState(() {
                                   _periodSelectedValue = newValue!;

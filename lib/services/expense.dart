@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:explension/data/core/seeds/seed_values.dart';
 import 'package:explension/data/data_source/local/hive_data_source.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/utils/logger.dart';
@@ -10,6 +11,21 @@ class ExpenseService {
   final _expenseBox = HiveDataSource.expenseBox;
 
   ExpenseService(this.logger);
+
+  // Add a method to initialize default data
+  Future<void> initializeDefaultData() async {
+    const funcName = "initializeDefaultData";
+
+    try {
+      if (_expenseBox.isEmpty) {
+        await _expenseBox.addAll(defaultExpenses);
+      }
+    } catch (e) {
+      logger.error(serviceName, funcName, e);
+    } finally {
+      logger.info(serviceName, funcName, "Default data initialized");
+    }
+  }
 
   Future<void> create(Expense expense) async {
     const funcName = "create";

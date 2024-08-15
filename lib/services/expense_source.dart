@@ -1,3 +1,4 @@
+import 'package:explension/data/core/seeds/seed_values.dart';
 import 'package:explension/data/data_source/local/hive_data_source.dart';
 import 'package:explension/models/wallet.dart';
 import 'package:explension/utils/logger.dart';
@@ -8,19 +9,14 @@ class WalletService {
 
   WalletService(this.logger);
 
-  // Add a method to initialize default sources
+  // Add a method to initialize default wallets
   Future<void> initializeDefaultData() async {
     if (_walletBox.isEmpty) {
-      final defaultSources = [
-        Wallet(id: 1, name: 'Cash'),
-        Wallet(id: 2, name: 'Gopay'),
-        Wallet(id: 3, name: 'OVO'),
-      ];
-      await _walletBox.addAll(defaultSources);
+      await _walletBox.addAll(defaultWallets);
     }
   }
 
-  // Get all sources from the Hive box
+  // Get all wallets from the Hive box
   List<Wallet> list() {
     return _walletBox.values.cast<Wallet>().toList();
   }
