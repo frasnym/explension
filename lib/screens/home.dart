@@ -1,8 +1,10 @@
+import 'package:explension/models/category.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/wallet.dart';
+import 'package:explension/services/category.dart';
 import 'package:explension/services/expense.dart';
-import 'package:explension/services/expense_source.dart';
-import 'package:explension/utils/random_expense_generator.dart';
+import 'package:explension/services/sub_category.dart';
+import 'package:explension/services/wallet.dart';
 import 'package:explension/widgets/home/custom_dropdown.dart';
 import 'package:explension/widgets/home/transaction_tile.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +12,15 @@ import 'package:flutter/material.dart';
 class HomePage extends StatefulWidget {
   final ExpenseService expenseService;
   final WalletService walletService;
+  final CategoryService categoryService;
+  final SubCategoryService subCategoryService;
 
   const HomePage({
     super.key,
     required this.expenseService,
     required this.walletService,
+    required this.categoryService,
+    required this.subCategoryService,
   });
 
   @override
@@ -22,16 +28,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Stream to listen for changes in the list of expenses
   late Stream<List<Expense>> _expensesStream;
 
   // List of all wallet
   late List<Wallet> _wallets;
+  late List<Category> _categories;
 
-  // Currently selected period for the expense filter
   String _periodSelectedValue = 'All';
-
-  // Currently selected wallet for the expense filter
   String _walletFilterSelectedValue = "All";
 
   @override
@@ -40,12 +43,130 @@ class _HomePageState extends State<HomePage> {
     // Initialize the expenses stream and the list of expense sources
     _expensesStream = widget.expenseService.stream();
     _wallets = widget.walletService.list();
+    _categories = widget.categoryService.list();
   }
 
   // Method to add a random expense for testing purposes
   void _addExpense() {
-    // TODO: Replace later with actual expense creation
-    widget.expenseService.create(generateRandomExpense());
+    final formKey = GlobalKey<FormState>();
+    String amount = '';
+    Category? category;
+    Category? subCategory;
+    Wallet? wallet;
+    String note = '';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add a Transaction'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Amount'),
+                  keyboardType: TextInputType.number,
+                  onSaved: (value) {
+                    amount = value!;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an amount';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid amount';
+                    }
+                    return null;
+                  },
+                ),
+                DropdownButtonFormField<Category>(
+                  decoration: const InputDecoration(labelText: 'Category'),
+                  value: category,
+                  items: _categories.map((Category value) {
+                    return DropdownMenuItem<Category>(
+                      value: value,
+                      child: Text(value.name),
+                    );
+                  }).toList(),
+                  onChanged: (Category? newValue) {
+                    setState(() {
+                      category = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a category';
+                    }
+                    return null;
+                  },
+                ),
+                // TODO: Select sub-category based on category
+                DropdownButtonFormField<Wallet>(
+                  decoration: const InputDecoration(labelText: 'Wallet'),
+                  value: wallet,
+                  items: _wallets.map((Wallet value) {
+                    return DropdownMenuItem<Wallet>(
+                      value: value,
+                      child: Text(value.name),
+                    );
+                  }).toList(),
+                  onChanged: (Wallet? newValue) {
+                    setState(() {
+                      wallet = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a wallet';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Note'),
+                  onSaved: (value) {
+                    note = value!;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  formKey.currentState!.save();
+
+                  // Create a new Expense object
+                  Expense newExpense = Expense(
+                    amount: double.parse(amount),
+                    category: category!,
+                    subCategory: subCategory,
+                    wallet: _wallets[0],
+                    createdAt: DateTime.now(),
+                    updatedAt: DateTime.now(),
+                    note: note,
+                  );
+
+                  // Add the new expense to your data source
+                  widget.expenseService.create(newExpense);
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
