@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:explension/constants.dart';
 import 'package:explension/injector.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/expense_source.dart';
@@ -9,6 +8,7 @@ import 'package:explension/services/expense_category.dart';
 import 'package:explension/services/expense_source.dart';
 import 'package:explension/services/expense_sub_category.dart';
 import 'package:explension/widgets/home/custom_dropdown.dart';
+import 'package:explension/widgets/home/transaction_tile.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -151,8 +151,8 @@ class _HomePageState extends State<HomePage> {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
-                      return _buildTransactionTile(
-                          filteredExpenses[index], index);
+                      return TransactionTile(
+                          expense: filteredExpenses[index], index: index);
                     },
                     childCount: filteredExpenses.length,
                   ),
@@ -176,69 +176,6 @@ class _HomePageState extends State<HomePage> {
         },
         tooltip: 'Add Expense',
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _buildDropdown({
-    required String value,
-    required void Function(String?) onChanged,
-    required List<String> items,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      child: DropdownButton<String>(
-        value: value,
-        onChanged: onChanged,
-        items: items.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildTransactionTile(Expense expense, int index) {
-    final backgroundColor = index % 2 == 0 ? Colors.grey[200] : Colors.white;
-
-    return Container(
-      color: backgroundColor,
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          width: 50,
-          decoration: BoxDecoration(
-            color: expense.category.color != null
-                ? Color(expense.category.color!)
-                : null,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            expense.category.icon,
-            color: Colors.white,
-          ),
-        ),
-        title: Text(
-            "${expense.category.name}${expense.subCategory != null ? ' - ${expense.subCategory!.name}' : ''}"),
-        subtitle: expense.note != null ? Text(expense.note!) : null,
-        trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Rp ${(expense.amount).toStringAsFixed(2)}',
-            ),
-            Text(
-              expense.source.name,
-            ),
-          ],
-        ),
       ),
     );
   }
