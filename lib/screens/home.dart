@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:explension/constants.dart';
 import 'package:explension/injector.dart';
 import 'package:explension/models/expense.dart';
+import 'package:explension/models/expense_source.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/expense_category.dart';
 import 'package:explension/services/expense_source.dart';
@@ -18,21 +19,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late List<Expense> _expenses;
+  late List<Expense> _filteredExpenses;
+  late List<ExpenseSource> _expenseSources;
   String _periodSelectedValue = 'This Week';
-  String _walletSelectedValue = 'Cash';
+  String _sourceExpenseFilterSelectedValue = "All";
 
   @override
   void initState() {
     super.initState();
     _expenses = sl<ExpenseService>().list();
+    _filteredExpenses = _expenses;
+    _expenseSources = sl<ExpenseSourceService>().list();
   }
 
   /// TODO: Replace this function later with real function
   void _addRandomExpense() {
     final random = Random();
 
-    final sources = sl<ExpenseSourceService>().list();
-    final randomSource = sources[random.nextInt(sources.length)];
+    final randomSource =
+        _expenseSources[random.nextInt(_expenseSources.length)];
 
     final categories = sl<ExpenseCategoryService>().list();
     final randomCategory = categories[random.nextInt(categories.length)];
@@ -66,7 +71,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // Calculate the sum of the amounts of all expenses
     final totalAmount =
-        _expenses.fold(0.0, (sum, expense) => sum + expense.amount);
+        _filteredExpenses.fold(0.0, (sum, expense) => sum + expense.amount);
 
     return Scaffold(
       body: CustomScrollView(
@@ -97,13 +102,25 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(width: 20),
                       _buildDropdown(
-                        value: _walletSelectedValue,
+                        value: _sourceExpenseFilterSelectedValue,
                         onChanged: (newValue) {
                           setState(() {
-                            _walletSelectedValue = newValue!;
+                            _sourceExpenseFilterSelectedValue = newValue!;
                           });
+
+                          // Filter _filteredExpenses based on the selected source
+                          if (newValue == "All") {
+                            _filteredExpenses = _expenses;
+                          } else {
+                            _filteredExpenses = _expenses
+                                .where((expense) =>
+                                    expense.source.name == newValue)
+                                .toList();
+                          }
                         },
-                        items: ['Cash', 'Credit Card'],
+                        items: ["All"]
+                            .followedBy(_expenseSources.map((e) => e.name))
+                            .toList(),
                       ),
                     ],
                   ),
@@ -114,12 +131,12 @@ class _HomePageState extends State<HomePage> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                final expenses = _expenses.reversed.toList();
+                final expenses = _filteredExpenses.reversed.toList();
 
                 // Get the reversed list of expenses
                 return _buildTransactionTile(expenses[index], index);
               },
-              childCount: _expenses.length,
+              childCount: _filteredExpenses.length,
             ),
           ),
         ],
