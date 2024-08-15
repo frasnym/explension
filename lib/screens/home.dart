@@ -8,6 +8,7 @@ import 'package:explension/services/expense.dart';
 import 'package:explension/services/expense_category.dart';
 import 'package:explension/services/expense_source.dart';
 import 'package:explension/services/expense_sub_category.dart';
+import 'package:explension/widgets/home/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,8 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late List<Expense> _expenses;
-  late List<Expense> _filteredExpenses;
+  late Stream<List<Expense>> _expensesStream;
   late List<ExpenseSource> _expenseSources;
   String _periodSelectedValue = 'This Week';
   String _sourceExpenseFilterSelectedValue = "All";
@@ -27,8 +27,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _expenses = sl<ExpenseService>().list();
-    _filteredExpenses = _expenses;
+    _expensesStream = sl<ExpenseService>().stream();
     _expenseSources = sl<ExpenseSourceService>().list();
   }
 
@@ -61,25 +60,42 @@ class _HomePageState extends State<HomePage> {
     }
 
     sl<ExpenseService>().create(newExpense);
-
-    setState(() {
-      _expenses.add(newExpense);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Calculate the sum of the amounts of all expenses
-    final totalAmount =
-        _filteredExpenses.fold(0.0, (sum, expense) => sum + expense.amount);
-
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            title: Text(
-              totalAmount.toString(),
-              style: Theme.of(context).textTheme.headlineLarge,
+            title: StreamBuilder<List<Expense>>(
+              stream: _expensesStream,
+              initialData: sl<ExpenseService>().list(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final expenses = snapshot.data!;
+                  final filteredExpenses = expenses.where((expense) {
+                    if (_sourceExpenseFilterSelectedValue == "All") {
+                      return true;
+                    } else {
+                      return expense.source.name ==
+                          _sourceExpenseFilterSelectedValue;
+                    }
+                  }).toList();
+
+                  final totalAmount = filteredExpenses.fold(
+                      0.0, (sum, expense) => sum + expense.amount);
+
+                  return Text(
+                    totalAmount.toString(),
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
             expandedHeight: 200.0,
             floating: false,
@@ -91,54 +107,67 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      _buildDropdown(
-                        value: _periodSelectedValue,
+                      CustomDropdown(
+                        items: ['This Week', 'This Month', 'This Year'],
                         onChanged: (newValue) {
                           setState(() {
                             _periodSelectedValue = newValue!;
                           });
                         },
-                        items: ['This Week', 'This Month', 'This Year'],
+                        value: _periodSelectedValue,
                       ),
                       const SizedBox(width: 20),
-                      _buildDropdown(
-                        value: _sourceExpenseFilterSelectedValue,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _sourceExpenseFilterSelectedValue = newValue!;
-                          });
-
-                          // Filter _filteredExpenses based on the selected source
-                          if (newValue == "All") {
-                            _filteredExpenses = _expenses;
-                          } else {
-                            _filteredExpenses = _expenses
-                                .where((expense) =>
-                                    expense.source.name == newValue)
-                                .toList();
-                          }
-                        },
-                        items: ["All"]
-                            .followedBy(_expenseSources.map((e) => e.name))
-                            .toList(),
-                      ),
+                      CustomDropdown(
+                          value: _sourceExpenseFilterSelectedValue,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _sourceExpenseFilterSelectedValue = newValue!;
+                            });
+                          },
+                          items: ["All"]
+                              .followedBy(_expenseSources.map((e) => e.name))
+                              .toList())
                     ],
                   ),
                 ],
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                final expenses = _filteredExpenses.reversed.toList();
+          StreamBuilder(
+            stream: _expensesStream,
+            initialData: sl<ExpenseService>().list(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final expenses = snapshot.data!;
+                final filteredExpenses = expenses.where((expense) {
+                  if (_sourceExpenseFilterSelectedValue == "All") {
+                    return true;
+                  } else {
+                    return expense.source.name ==
+                        _sourceExpenseFilterSelectedValue;
+                  }
+                }).toList();
 
-                // Get the reversed list of expenses
-                return _buildTransactionTile(expenses[index], index);
-              },
-              childCount: _filteredExpenses.length,
-            ),
-          ),
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return _buildTransactionTile(
+                          filteredExpenses[index], index);
+                    },
+                    childCount: filteredExpenses.length,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return SliverToBoxAdapter(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                return const SliverToBoxAdapter(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
