@@ -11,10 +11,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -47,10 +47,10 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {
                               print('Navigate to registration page');
                             },
-                            child: const Text(
+                            child: Text(
                               'Sign Up',
                               style: TextStyle(
-                                color: Colors.purple,
+                                color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -69,10 +69,10 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           print('Forgot Password clicked');
                         },
-                        child: const Text(
+                        child: Text(
                           'Forgot Password?',
                           style: TextStyle(
-                            color: Colors.purple,
+                            color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
