@@ -5,6 +5,8 @@ import 'package:explension/services/category.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/sub_category.dart';
 import 'package:explension/services/wallet.dart';
+import 'package:explension/utils/validator.dart';
+import 'package:explension/widgets/login/custom_text_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +20,7 @@ class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String? formErrorText = "failed login";
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +61,43 @@ class LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
+                    // Show form error here
+                    if (formErrorText != null)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(top: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(borderRadius),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              formErrorText!,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.close, color: Colors.white),
+                              onPressed: () =>
+                                  setState(() => formErrorText = null),
+                            ),
+                          ],
+                        ),
+                      ),
                     const SizedBox(height: 20),
-                    const InputText(label: "Email Address"),
+                    CustomTextFormField(
+                        controller: _emailController,
+                        labelText: "Email Address",
+                        validator: Validator.validateEmail),
                     const SizedBox(height: 20),
-                    const InputText(label: "Password"),
-                    const SizedBox(height: 10),
+                    CustomTextFormField(
+                        controller: _passwordController,
+                        labelText: "Password",
+                        validator: Validator.validatePassword),
+                    const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -124,42 +159,6 @@ class LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-}
-
-class InputText extends StatelessWidget {
-  final Color borderColor;
-  final String label;
-
-  const InputText({
-    super.key,
-    required this.label,
-    this.borderColor = Colors.grey,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: borderColor),
-          borderRadius: const BorderRadius.all(Radius.circular(borderRadius)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: borderColor),
-          borderRadius: const BorderRadius.all(Radius.circular(borderRadius)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: borderColor),
-          borderRadius: const BorderRadius.all(Radius.circular(borderRadius)),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-        fillColor: borderColor.withOpacity(0.1),
-        filled: true,
-      ),
-    );
   }
 }
 
