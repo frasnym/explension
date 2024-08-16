@@ -5,20 +5,20 @@ import 'package:hive/hive.dart';
 part 'expense.g.dart';
 
 @HiveType(typeId: 0)
-class Expense {
-  @HiveField(1)
+class Expense extends HiveObject {
+  @HiveField(0)
   final double amount;
-  @HiveField(2)
+  @HiveField(1)
   final Category category;
-  @HiveField(3)
+  @HiveField(2)
   Category? subCategory;
-  @HiveField(4)
+  @HiveField(3)
   final Wallet wallet;
-  @HiveField(5)
+  @HiveField(4)
   final DateTime createdAt;
-  @HiveField(6)
+  @HiveField(5)
   final DateTime updatedAt;
-  @HiveField(7)
+  @HiveField(6)
   String? note;
 
   Expense({
@@ -33,6 +33,7 @@ class Expense {
 
   Map<String, dynamic> toJson() {
     return {
+      'key': key,
       'amount': amount,
       'category': category.toJson(),
       'subCategory': subCategory?.toJson(),

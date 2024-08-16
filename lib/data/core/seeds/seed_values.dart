@@ -5,27 +5,26 @@ import 'package:explension/models/category.dart';
 
 final defaultCategories = [
   Category(
-      id: 1,
-      name: 'Food & Drink',
-      icon: Icons.restaurant,
-      color: Colors.orange.value),
+      name: 'Food & Drink', icon: Icons.restaurant, color: Colors.orange.value),
   Category(
-      id: 2,
       name: 'Transport',
       icon: Icons.local_shipping,
       color: Colors.yellow.value),
-  Category(id: 3, name: 'Home', icon: Icons.home, color: Colors.brown.value),
-  Category(id: 4, parentId: 1, name: "Breakfast"),
-  Category(id: 5, parentId: 1, name: "Lunch"),
-  Category(id: 6, parentId: 1, name: "Dinner"),
-  Category(id: 7, parentId: 2, name: "Parking"),
-  Category(id: 8, parentId: 2, name: "Gasoline"),
+  Category(name: 'Home', icon: Icons.home, color: Colors.brown.value),
+];
+
+final defaultSubCategoris = [
+  Category(parentId: defaultCategories[0].key, name: "Breakfast"),
+  Category(parentId: defaultCategories[0].key, name: "Lunch"),
+  Category(parentId: defaultCategories[0].key, name: "Dinner"),
+  Category(parentId: defaultCategories[1].key, name: "Parking"),
+  Category(parentId: defaultCategories[1].key, name: "Gasoline"),
 ];
 
 final defaultWallets = [
-  Wallet(id: 1, name: 'Cash'),
-  Wallet(id: 2, name: 'Gopay'),
-  Wallet(id: 3, name: 'OVO'),
+  Wallet(name: 'Cash'),
+  Wallet(name: 'Gopay'),
+  Wallet(name: 'OVO'),
 ];
 
 final DateTime twoMonthsAgo = DateTime.now().subtract(const Duration(days: 60));

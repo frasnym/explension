@@ -6,22 +6,18 @@ part 'category.g.dart';
 @HiveType(typeId: 3)
 class Category extends HiveObject {
   @HiveField(0)
-  int id;
-
-  @HiveField(1)
   String name;
 
-  @HiveField(2)
+  @HiveField(1)
   int? iconCodePoint;
 
-  @HiveField(3)
-  int? parentId;
+  @HiveField(2)
+  dynamic parentId;
 
-  @HiveField(4)
+  @HiveField(3)
   int? color;
 
   Category({
-    required this.id,
     required this.name,
     IconData? icon,
     this.parentId,
@@ -36,7 +32,7 @@ class Category extends HiveObject {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'key': key,
       'name': name,
       'iconCodePoint': iconCodePoint,
       'parentId': parentId,

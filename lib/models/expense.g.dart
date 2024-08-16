@@ -17,13 +17,13 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Expense(
-      amount: fields[1] as double,
-      category: fields[2] as Category,
-      subCategory: fields[3] as Category?,
-      wallet: fields[4] as Wallet,
-      createdAt: fields[5] as DateTime,
-      updatedAt: fields[6] as DateTime,
-      note: fields[7] as String?,
+      amount: fields[0] as double,
+      category: fields[1] as Category,
+      subCategory: fields[2] as Category?,
+      wallet: fields[3] as Wallet,
+      createdAt: fields[4] as DateTime,
+      updatedAt: fields[5] as DateTime,
+      note: fields[6] as String?,
     );
   }
 
@@ -31,19 +31,19 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
   void write(BinaryWriter writer, Expense obj) {
     writer
       ..writeByte(7)
-      ..writeByte(1)
+      ..writeByte(0)
       ..write(obj.amount)
-      ..writeByte(2)
+      ..writeByte(1)
       ..write(obj.category)
-      ..writeByte(3)
+      ..writeByte(2)
       ..write(obj.subCategory)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.wallet)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.createdAt)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.updatedAt)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.note);
   }
 

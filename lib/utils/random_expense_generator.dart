@@ -25,7 +25,7 @@ Expense generateRandomExpense() {
   );
 
   final subCategories =
-      sl<SubCategoryService>().listByParentId(randomCategory.id);
+      sl<SubCategoryService>().listByParentId(randomCategory.key);
   if (subCategories.isNotEmpty) {
     final randomSubCategory =
         subCategories[random.nextInt(subCategories.length)];

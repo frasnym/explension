@@ -17,26 +17,23 @@ class CategoryAdapter extends TypeAdapter<Category> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Category(
-      id: fields[0] as int,
-      name: fields[1] as String,
-      parentId: fields[3] as int?,
-      color: fields[4] as int?,
-    )..iconCodePoint = fields[2] as int?;
+      name: fields[0] as String,
+      parentId: fields[2] as dynamic,
+      color: fields[3] as int?,
+    )..iconCodePoint = fields[1] as int?;
   }
 
   @override
   void write(BinaryWriter writer, Category obj) {
     writer
-      ..writeByte(5)
-      ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
-      ..write(obj.name)
-      ..writeByte(2)
-      ..write(obj.iconCodePoint)
-      ..writeByte(3)
-      ..write(obj.parentId)
       ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.iconCodePoint)
+      ..writeByte(2)
+      ..write(obj.parentId)
+      ..writeByte(3)
       ..write(obj.color);
   }
 
