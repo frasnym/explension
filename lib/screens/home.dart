@@ -1,6 +1,7 @@
 import 'package:explension/models/category.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/wallet.dart';
+import 'package:explension/screens/auth/login.dart';
 import 'package:explension/services/category.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/sub_category.dart';
@@ -8,6 +9,7 @@ import 'package:explension/services/wallet.dart';
 import 'package:explension/widgets/home/custom_dropdown.dart';
 import 'package:explension/widgets/home/transaction_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
   final ExpenseService expenseService;
@@ -40,6 +42,24 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    // TODO: Make it reusable for protected page
+    final session = Supabase.instance.client.auth.currentSession;
+    if (session == null) {
+      // User is not logged in, push the LoginPage screen
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      });
+      print("User not logged in, redirect to login");
+    } else {
+      // User is logged in, initialize the expenses stream and the list of expense sources
+      _expensesStream = widget.expenseService.stream();
+      _wallets = widget.walletService.list();
+      _categories = widget.categoryService.list();
+    }
+
     // Initialize the expenses stream and the list of expense sources
     _expensesStream = widget.expenseService.stream();
     _wallets = widget.walletService.list();

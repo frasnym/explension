@@ -5,9 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:explension/injector.dart';
 import 'package:explension/services/wallet.dart';
 import 'package:explension/data/data_source/local/hive_data_source.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  const bool isProduction = bool.fromEnvironment('dart.vm.product');
+  await dotenv.load(
+      fileName: isProduction ? ".env.production" : ".env.development");
 
   // Init data source
   await HiveDataSource.init();
@@ -19,6 +25,13 @@ void main() async {
   await sl<WalletService>().initializeDefaultData();
   await sl<CategoryService>().initializeDefaultData();
   await sl<ExpenseService>().initializeDefaultData();
+
+  // Init Supabase
+  // TODO: Move to env file
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
 
   runApp(MyApp());
 }

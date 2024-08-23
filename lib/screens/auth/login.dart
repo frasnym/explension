@@ -8,19 +8,83 @@ import 'package:explension/services/wallet.dart';
 import 'package:explension/utils/validator.dart';
 import 'package:explension/widgets/login/custom_text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  LoginPageState createState() => LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
+  final supabase = Supabase.instance.client;
+
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String? formErrorText = "failed login";
+  final _emailController = TextEditingController(text: "test@explension.com");
+  final _passwordController = TextEditingController(text: "testcase");
+  String? formErrorText;
+
+  Future<void> _signIn() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      try {
+        final AuthResponse res = await supabase.auth.signInWithPassword(
+          email: email,
+          password: password,
+        );
+
+        if (res.user != null) {
+          print("success logged in");
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return HomePage(
+                  expenseService: sl<ExpenseService>(),
+                  walletService: sl<WalletService>(),
+                  categoryService: sl<CategoryService>(),
+                  subCategoryService: sl<SubCategoryService>(),
+                );
+              }),
+            );
+          }
+        }
+      } catch (e) {
+        // Handle error
+        print(e);
+        setState(() {
+          formErrorText = "Unable to login";
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Check if the user is logged in
+    final session = Supabase.instance.client.auth.currentSession;
+    if (session != null) {
+      print("User authenticated, redirecting");
+      // User is logged in, navigate to the HomePage screen
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) {
+            return HomePage(
+              expenseService: sl<ExpenseService>(),
+              walletService: sl<WalletService>(),
+              categoryService: sl<CategoryService>(),
+              subCategoryService: sl<SubCategoryService>(),
+            );
+          }),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,21 +181,7 @@ class LoginPageState extends State<LoginPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return HomePage(
-                                  expenseService: sl<ExpenseService>(),
-                                  walletService: sl<WalletService>(),
-                                  categoryService: sl<CategoryService>(),
-                                  subCategoryService: sl<SubCategoryService>(),
-                                );
-                              }),
-                            );
-                          }
-                        },
+                        onPressed: _signIn,
                         child: const Text('Log In'),
                       ),
                     ),
