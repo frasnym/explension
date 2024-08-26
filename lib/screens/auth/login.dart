@@ -21,8 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   final supabase = Supabase.instance.client;
 
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController(text: "test@explension.com");
-  final _passwordController = TextEditingController(text: "testcase");
+  final _emailController = TextEditingController(text: "");
+  final _passwordController = TextEditingController(text: "");
   String? formErrorText;
 
   Future<void> _signIn() async {
@@ -104,28 +104,28 @@ class _LoginPageState extends State<LoginPage> {
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text("Don't have an account yet?"),
-                          TextButton(
-                            onPressed: () {
-                              print('Navigate to registration page');
-                            },
-                            child: Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Show form error here
+                    // TODO: Add sign up page
+                    // Align(
+                    //   alignment: Alignment.center,
+                    //   child: Row(
+                    //     mainAxisSize: MainAxisSize.min,
+                    //     children: [
+                    //       const Text("Don't have an account yet?"),
+                    //       TextButton(
+                    //         onPressed: () {
+                    //           print('Navigate to registration page');
+                    //         },
+                    //         child: Text(
+                    //           'Sign Up',
+                    //           style: TextStyle(
+                    //             color: Theme.of(context).colorScheme.primary,
+                    //             fontWeight: FontWeight.bold,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     if (formErrorText != null)
                       Container(
                         width: double.infinity,
@@ -162,21 +162,22 @@ class _LoginPageState extends State<LoginPage> {
                         labelText: "Password",
                         validator: Validator.validatePassword),
                     const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          print('Forgot Password clicked');
-                        },
-                        child: Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // TODO: Add forgot password page
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: TextButton(
+                    //     onPressed: () {
+                    //       print('Forgot Password clicked');
+                    //     },
+                    //     child: Text(
+                    //       'Forgot Password?',
+                    //       style: TextStyle(
+                    //         color: Theme.of(context).colorScheme.primary,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
