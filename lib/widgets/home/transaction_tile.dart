@@ -1,3 +1,4 @@
+import 'package:explension/utils/money.dart';
 import 'package:flutter/material.dart';
 import 'package:explension/models/expense.dart';
 
@@ -37,7 +38,7 @@ class TransactionTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Rp ${(expense.amount).toStringAsFixed(2)}',
+              'Rp ${formatMoney(expense.amount)}',
             ),
             Text(
               expense.wallet.name,

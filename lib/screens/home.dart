@@ -6,6 +6,7 @@ import 'package:explension/services/category.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/sub_category.dart';
 import 'package:explension/services/wallet.dart';
+import 'package:explension/utils/money.dart';
 import 'package:explension/widgets/home/custom_dropdown.dart';
 import 'package:explension/widgets/home/transaction_tile.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               slivers: <Widget>[
                 SliverAppBar(
                   title: Text(
-                    totalAmount.toString(),
+                    "Rp ${formatMoney(totalAmount)}",
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   expandedHeight: 200.0,
