@@ -13,12 +13,12 @@ final defaultCategories = [
   Category(name: 'Home', icon: Icons.home, color: Colors.brown.value),
 ];
 
-final defaultSubCategoris = [
-  Category(parentId: defaultCategories[0].key, name: "Breakfast"),
-  Category(parentId: defaultCategories[0].key, name: "Lunch"),
-  Category(parentId: defaultCategories[0].key, name: "Dinner"),
-  Category(parentId: defaultCategories[1].key, name: "Parking"),
-  Category(parentId: defaultCategories[1].key, name: "Gasoline"),
+final defaultSubCategories = [
+  Category(parentId: 0, name: "Breakfast"),
+  Category(parentId: 0, name: "Lunch"),
+  Category(parentId: 0, name: "Dinner"),
+  Category(parentId: 1, name: "Parking"),
+  Category(parentId: 1, name: "Gasoline"),
 ];
 
 final defaultWallets = [

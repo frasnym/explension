@@ -1,7 +1,7 @@
-.PHONY: generate-model run-chrome
+.PHONY: generate-model run-on-chrome
 
 generate-model:
 	flutter packages pub run build_runner build
 
-run-chrome:
+run-on-chrome:
 	flutter run -d chrome

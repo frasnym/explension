@@ -16,7 +16,8 @@ class CategoryService {
 
     try {
       if (_categoryBox.isEmpty) {
-        await _categoryBox.addAll(defaultCategories);
+        await _categoryBox
+            .addAll(defaultCategories.followedBy(defaultSubCategories));
       }
     } catch (e) {
       logger.error(serviceName, funcName, e);

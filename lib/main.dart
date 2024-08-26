@@ -27,7 +27,6 @@ void main() async {
   await sl<ExpenseService>().initializeDefaultData();
 
   // Init Supabase
-  // TODO: Move to env file
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
@@ -88,8 +87,8 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       // themeMode: ThemeMode.system,
-      themeMode: ThemeMode.dark,
-      home: const LoginPage(),
+      themeMode: ThemeMode.light,
+      home: LoginPage(),
     );
   }
 }
