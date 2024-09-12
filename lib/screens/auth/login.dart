@@ -21,8 +21,9 @@ class _LoginPageState extends State<LoginPage> {
   final supabase = Supabase.instance.client;
 
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController(text: "");
-  final _passwordController = TextEditingController(text: "");
+  final _emailController =
+      TextEditingController(text: ""); // test@explension.com
+  final _passwordController = TextEditingController(text: ""); // testcase
   String? formErrorText;
 
   Future<void> _signIn() async {

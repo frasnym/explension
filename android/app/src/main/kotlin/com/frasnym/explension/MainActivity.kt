@@ -1,4 +1,4 @@
-package com.example.explension
+package com.frasnym.explension
 
 import io.flutter.embedding.android.FlutterActivity
 

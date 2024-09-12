@@ -18,8 +18,9 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
+      obscureText: labelText == 'Password' ? true : false,
       decoration: InputDecoration(
-        labelText: labelText,
+        label: Text(labelText),
         border: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(borderRadius)),

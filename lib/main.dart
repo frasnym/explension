@@ -11,9 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  const bool isProduction = bool.fromEnvironment('dart.vm.product');
-  await dotenv.load(
-      fileName: isProduction ? ".env.production" : ".env.development");
+  await dotenv.load(fileName: "assets/.env");
 
   // Init data source
   await HiveDataSource.init();
@@ -31,6 +29,8 @@ void main() async {
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
+
+  print("Finish init");
 
   runApp(MyApp());
 }
