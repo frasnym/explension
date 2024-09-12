@@ -1,6 +1,6 @@
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/wallet.dart';
-import 'package:explension/screens/add_expense.dart';
+import 'package:explension/screens/add_expense/add_expense_form.dart';
 import 'package:explension/screens/auth/login.dart';
 import 'package:explension/services/category.dart';
 import 'package:explension/services/expense.dart';
@@ -58,6 +58,11 @@ class _HomePageState extends State<HomePage> {
       _expensesStream = widget.expenseService.stream();
       _wallets = widget.walletService.list();
     }
+
+    // TODO: Delete later, for dev only
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _addExpense();
+    });
   }
 
   // Method to add a random expense for testing purposes

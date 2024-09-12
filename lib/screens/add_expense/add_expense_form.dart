@@ -2,6 +2,7 @@ import 'package:explension/constants.dart';
 import 'package:explension/models/category.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/wallet.dart';
+import 'package:explension/screens/add_expense/amount_input.dart';
 import 'package:explension/services/category.dart';
 import 'package:explension/services/sub_category.dart';
 import 'package:explension/services/wallet.dart';
@@ -37,6 +38,11 @@ class AddExpensePageState extends State<AddExpensePage> {
     // Initialize the expenses stream and the list of expense sources
     _walletOptions = widget.walletService.list();
     _categoryOptions = widget.categoryService.list();
+
+    // TODO: Delete later, for dev only
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigateToCalculatorInput();
+    });
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -124,7 +130,7 @@ class AddExpensePageState extends State<AddExpensePage> {
                       }
                       return null;
                     },
-                    onTap: () => _amountController.clear(),
+                    onTap: _navigateToCalculatorInput,
                     hintText: "Enter the amount",
                     keyboardType: TextInputType.number,
                   ),
@@ -177,5 +183,14 @@ class AddExpensePageState extends State<AddExpensePage> {
             ),
           ),
         ));
+  }
+
+  void _navigateToCalculatorInput() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AmountInput(amountController: _amountController),
+      ),
+    );
   }
 }
