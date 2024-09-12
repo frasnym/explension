@@ -7,6 +7,7 @@ import 'package:explension/services/sub_category.dart';
 import 'package:explension/services/wallet.dart';
 import 'package:explension/utils/validator.dart';
 import 'package:explension/widgets/login/custom_text_input.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -22,8 +23,9 @@ class _LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
   final _emailController =
-      TextEditingController(text: ""); // test@explension.com
-  final _passwordController = TextEditingController(text: ""); // testcase
+      TextEditingController(text: kDebugMode ? "test@explension.com" : "");
+  final _passwordController =
+      TextEditingController(text: kDebugMode ? "testcase" : "");
   String? formErrorText;
 
   Future<void> _signIn() async {

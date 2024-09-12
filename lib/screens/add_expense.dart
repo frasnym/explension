@@ -1,12 +1,15 @@
+import 'package:explension/constants.dart';
 import 'package:explension/models/category.dart';
 import 'package:explension/models/expense.dart';
 import 'package:explension/models/wallet.dart';
 import 'package:explension/services/category.dart';
 import 'package:explension/services/sub_category.dart';
 import 'package:explension/services/wallet.dart';
+import 'package:explension/widgets/ui/input/select_input.dart';
 import 'package:flutter/material.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/injector.dart';
+import 'package:moon_design/moon_design.dart';
 
 class AddExpensePage extends StatefulWidget {
   final ExpenseService expenseService = sl<ExpenseService>();
@@ -23,25 +26,25 @@ class AddExpensePage extends StatefulWidget {
 }
 
 class AddExpensePageState extends State<AddExpensePage> {
-  late List<Wallet> _wallets;
-  late List<Category> _categories;
-  List<Category> _subCategories = [];
+  late List<Wallet> _walletOptions;
+  late List<Category> _categoryOptions;
+  List<Category> _subCategoryOptions = [];
 
   @override
   void initState() {
     super.initState();
 
     // Initialize the expenses stream and the list of expense sources
-    _wallets = widget.walletService.list();
-    _categories = widget.categoryService.list();
+    _walletOptions = widget.walletService.list();
+    _categoryOptions = widget.categoryService.list();
   }
 
-  final formKey = GlobalKey<FormState>();
-  final amountController = TextEditingController(text: "");
-  final noteController = TextEditingController(text: "");
-  Category? category;
-  Category? subCategory;
-  Wallet? wallet;
+  final _formKey = GlobalKey<FormState>();
+  final _amountController = TextEditingController(text: "");
+  final _noteController = TextEditingController(text: "");
+  Category? _selectedCategory;
+  Category? _selectedSubCategory;
+  Wallet? _selectedWallet;
 
   @override
   Widget build(BuildContext context) {
@@ -58,95 +61,59 @@ class AddExpensePageState extends State<AddExpensePage> {
               color: Colors.grey,
               width: 1.0,
             ),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(borderRadius),
           ),
           child: Form(
-            key: formKey,
+            key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: DropdownButtonFormField<Category>(
-                    decoration: const InputDecoration(
-                      labelText: 'Category',
-                      hintText: 'Select the category',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                    ),
-                    value: category,
-                    items: _categories.map((Category value) {
-                      return DropdownMenuItem<Category>(
-                        value: value,
-                        child: Text(value.name),
-                      );
-                    }).toList(),
-                    onChanged: (Category? newValue) {
-                      if (newValue == null) return;
+                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  child: SelectInput(
+                    placeholder: "Select Category",
+                    optionsList: _categoryOptions.map((c) => c.name).toList(),
+                    onChange: (newVal) => {
                       setState(() {
-                        category = newValue;
+                        _selectedCategory = _categoryOptions
+                            .firstWhere((element) => element.name == newVal);
 
                         final subCats = widget.subCategoryService
-                            .listByParentId(newValue.key);
+                            .listByParentId(_selectedCategory!.key);
                         if (subCats.isNotEmpty) {
-                          _subCategories = subCats;
+                          _subCategoryOptions = subCats;
                         } else {
-                          _subCategories = [];
+                          _subCategoryOptions = [];
                         }
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please select a category';
-                      }
-                      return null;
+                      })
                     },
                   ),
                 ),
-                _subCategories.isNotEmpty
+                _subCategoryOptions.isNotEmpty
                     ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: DropdownButtonFormField<Category>(
-                          decoration: const InputDecoration(
-                            labelText: 'Sub Category',
-                            hintText: 'Select the category',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                          ),
-                          value: subCategory,
-                          items: _subCategories.map((Category value) {
-                            return DropdownMenuItem<Category>(
-                              value: value,
-                              child: Text(value.name),
-                            );
-                          }).toList(),
-                          onChanged: (Category? newValue) {
+                        padding:
+                            const EdgeInsets.symmetric(vertical: paddingSize),
+                        child: SelectInput(
+                          placeholder: "Select Sub-Category",
+                          optionsList:
+                              _subCategoryOptions.map((c) => c.name).toList(),
+                          onChange: (newVal) => {
                             setState(() {
-                              subCategory = newValue;
-                            });
+                              _selectedSubCategory =
+                                  _subCategoryOptions.firstWhere(
+                                      (element) => element.name == newVal);
+                            })
                           },
                         ),
                       )
                     : Container(),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Amount',
-                      hintText: 'Enter the amount',
-                      prefixText: "IDR ",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                    ),
-                    controller: amountController,
-                    keyboardType: TextInputType.number,
+                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  child: MoonFormTextInput(
+                    controller: _amountController,
                     validator: (value) {
                       if (value == null) {
-                        return 'Please select a category';
+                        return 'Please enter amount';
                       }
                       final amount = double.tryParse(value);
                       if (amount == null) {
@@ -157,67 +124,46 @@ class AddExpensePageState extends State<AddExpensePage> {
                       }
                       return null;
                     },
+                    onTap: () => _amountController.clear(),
+                    hintText: "Enter the amount",
+                    keyboardType: TextInputType.number,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: DropdownButtonFormField<Wallet>(
-                    decoration: const InputDecoration(
-                      labelText: 'Wallet',
-                      hintText: 'Select the wallet',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                    ),
-                    value: wallet,
-                    items: _wallets.map((Wallet value) {
-                      return DropdownMenuItem<Wallet>(
-                        value: value,
-                        child: Text(value.name),
-                      );
-                    }).toList(),
-                    onChanged: (Wallet? newValue) {
-                      if (newValue == null) return;
+                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  child: SelectInput(
+                    placeholder: "Select Wallet",
+                    optionsList: _walletOptions.map((c) => c.name).toList(),
+                    onChange: (newVal) => {
                       setState(() {
-                        wallet = newValue;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please select a wallet';
-                      }
-                      return null;
+                        _selectedWallet = _walletOptions
+                            .firstWhere((element) => element.name == newVal);
+                      })
                     },
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Note',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                    ),
-                    controller: noteController,
-                    keyboardType: TextInputType.text,
+                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  child: MoonFormTextInput(
+                    controller: _noteController,
+                    hintText: "Enter the note",
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: paddingSize * 2),
                 ElevatedButton(
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
 
                       // Create a new Expense object
                       Expense newExpense = Expense(
-                        amount: double.parse(amountController.text),
-                        category: category!,
-                        subCategory: subCategory,
-                        wallet: wallet!,
+                        amount: double.parse(_amountController.text),
+                        category: _selectedCategory!,
+                        subCategory: _selectedSubCategory,
+                        wallet: _selectedWallet!,
                         createdAt: DateTime.now(),
                         updatedAt: DateTime.now(),
-                        note: noteController.text,
+                        note: _noteController.text,
                       );
 
                       // Add the new expense to your data source
