@@ -1,4 +1,5 @@
 import 'package:explension/constants.dart';
+import 'package:explension/utils/money.dart';
 import 'package:explension/widgets/ui/input/calculator_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
@@ -31,19 +32,41 @@ class AmountInputState extends State<AmountInput> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextFormField(
-              controller: widget.amountController,
-              decoration: const InputDecoration(labelText: 'Amount'),
-              keyboardType: TextInputType.number,
+            Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 4,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(borderRadius),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Rp ${formatMoneyString(widget.amountController.text)}",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(height: paddingSize / 2),
+                  _isShowEquationInput
+                      ? Text(
+                          _equationController.text
+                              .split(RegExp(r'[+\-*/]'))
+                              .map((number) {
+                            final parsedNumber = num.tryParse(number);
+                            return parsedNumber != null
+                                ? formatMoney(parsedNumber)
+                                : '';
+                          }).join(_equationController.text
+                                      .contains(RegExp(r'[+\-*/]'))
+                                  ? _equationController.text
+                                      .split(RegExp(r'\d+'))[1]
+                                  : ''),
+                        )
+                      : Container(),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
-            _isShowEquationInput
-                ? TextFormField(
-                    controller: _equationController,
-                    decoration: const InputDecoration(labelText: 'Equation'),
-                    keyboardType: TextInputType.number,
-                  )
-                : Container(),
             const SizedBox(height: 100),
             CalculatorKeyboard(
               onButtonPressed: (String value) {
@@ -107,6 +130,8 @@ class AmountInputState extends State<AmountInput> {
       } else {
         _isShowEquationInput = false;
       }
+
+      // TODO: Check if number after operator is all zeros; if yes, remove it
 
       // Calculate the result using math_expressions package
       final expression = Parser().parse(_equationController.text);
