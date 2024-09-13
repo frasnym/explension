@@ -16,7 +16,7 @@ class LoadingDialog<T> extends StatelessWidget {
       future: future,
       builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return AlertDialog(
+          return const AlertDialog(
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

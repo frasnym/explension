@@ -1,3 +1,4 @@
+import 'package:explension/constants.dart';
 import 'package:explension/screens/auth/login.dart';
 import 'package:explension/services/expense.dart';
 import 'package:explension/services/category.dart';
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderRadius: BorderRadius.all(Radius.circular(kDefaultRadius)),
         ),
         minimumSize: const Size(double.infinity, 50),
       ),
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderRadius: BorderRadius.all(Radius.circular(kDefaultRadius)),
         ),
         minimumSize: const Size(double.infinity, 50),
       ),
