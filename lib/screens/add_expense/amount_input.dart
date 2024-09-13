@@ -32,46 +32,46 @@ class AmountInputState extends State<AmountInput> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height / 4,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(borderRadius),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Rp ${formatMoneyString(widget.amountController.text)}",
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                  const SizedBox(height: paddingSize / 2),
-                  _isShowEquationInput
-                      ? Text(
-                          _equationController.text
-                              .split(RegExp(r'[+\-*/]'))
-                              .map((number) {
-                            final parsedNumber = num.tryParse(number);
-                            return parsedNumber != null
-                                ? formatMoney(parsedNumber)
-                                : '';
-                          }).join(_equationController.text
-                                      .contains(RegExp(r'[+\-*/]'))
-                                  ? _equationController.text
-                                      .split(RegExp(r'\d+'))[1]
-                                  : ''),
-                        )
-                      : Container(),
-                ],
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(borderRadius),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Rp ${formatMoneyString(widget.amountController.text)}",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                    const SizedBox(height: kDefaultPadding / 2),
+                    _isShowEquationInput
+                        ? Text(
+                            _equationController.text
+                                .split(RegExp(r'[+\-*/]'))
+                                .map((number) {
+                              final parsedNumber = num.tryParse(number);
+                              return parsedNumber != null
+                                  ? formatMoney(parsedNumber)
+                                  : '';
+                            }).join(_equationController.text
+                                        .contains(RegExp(r'[+\-*/]'))
+                                    ? _equationController.text
+                                        .split(RegExp(r'\d+'))[1]
+                                    : ''),
+                          )
+                        : Container(),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 100),
             CalculatorKeyboard(
               onButtonPressed: (String value) {
                 setState(() {
-                  if (value == 'Backspace') {
+                  if (value == calculatorDeleteValue) {
                     _handleBackspace();
                   } else {
                     _oneOperatorGuard(value);
@@ -104,11 +104,10 @@ class AmountInputState extends State<AmountInput> {
               },
             ),
             Container(
-              height: 100,
               decoration: const BoxDecoration(
                 color: Colors.red,
               ),
-              padding: const EdgeInsets.all(paddingSize),
+              padding: const EdgeInsets.all(kDefaultPadding),
               child: ElevatedButton(
                 onPressed: double.tryParse(widget.amountController.text) !=
                             null &&

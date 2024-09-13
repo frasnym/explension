@@ -8,35 +8,32 @@ class CalculatorKeyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.amber,
-        ),
-        child: Column(
-          children: [
-            _buildRow(['1', '2', '3', '/']),
-            _buildRow(['4', '5', '6', '*']),
-            _buildRow(['7', '8', '9', '-']),
-            _buildRow(['0', '000', '<', '+']),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: kDefaultPadding * 2),
+      height: MediaQuery.of(context).size.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildRow(['1', '2', '3', '/']),
+          _buildRow(['4', '5', '6', '*']),
+          _buildRow(['7', '8', '9', '-']),
+          _buildRow(['0', '000', '<', '+']),
+        ],
       ),
     );
   }
 
   Widget _buildRow(List<String> texts) {
-    return Expanded(
-      child: Row(
-        children: texts
-            .map((text) => CalculatorButton(
-                  text: text,
-                  onPressed: (text == '<')
-                      ? () => onButtonPressed('Backspace')
-                      : () => onButtonPressed(text),
-                ))
-            .toList(),
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: texts
+          .map((text) => CalculatorButton(
+                text: text,
+                onPressed: (text == '<')
+                    ? () => onButtonPressed(calculatorDeleteValue)
+                    : () => onButtonPressed(text),
+              ))
+          .toList(),
     );
   }
 }
@@ -50,16 +47,17 @@ class CalculatorButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.red,
-        ),
-        padding: EdgeInsets.all(paddingSize),
-        height: double.infinity,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          child: Text(text),
+    var size = MediaQuery.of(context).size.width / 4.7;
+    return SizedBox(
+      height: size,
+      width: size,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                color: Colors.white,
+              ),
         ),
       ),
     );

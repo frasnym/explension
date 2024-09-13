@@ -75,7 +75,8 @@ class AddExpensePageState extends State<AddExpensePage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: kDefaultPadding),
                   child: SelectInput(
                     placeholder: "Select Category",
                     optionsList: _categoryOptions.map((c) => c.name).toList(),
@@ -97,8 +98,8 @@ class AddExpensePageState extends State<AddExpensePage> {
                 ),
                 _subCategoryOptions.isNotEmpty
                     ? Padding(
-                        padding:
-                            const EdgeInsets.symmetric(vertical: paddingSize),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: kDefaultPadding),
                         child: SelectInput(
                           placeholder: "Select Sub-Category",
                           optionsList:
@@ -114,7 +115,8 @@ class AddExpensePageState extends State<AddExpensePage> {
                       )
                     : Container(),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: kDefaultPadding),
                   child: MoonFormTextInput(
                     controller: _amountController,
                     validator: (value) {
@@ -136,7 +138,8 @@ class AddExpensePageState extends State<AddExpensePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: kDefaultPadding),
                   child: SelectInput(
                     placeholder: "Select Wallet",
                     optionsList: _walletOptions.map((c) => c.name).toList(),
@@ -149,13 +152,14 @@ class AddExpensePageState extends State<AddExpensePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: paddingSize),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: kDefaultPadding),
                   child: MoonFormTextInput(
                     controller: _noteController,
                     hintText: "Enter the note",
                   ),
                 ),
-                const SizedBox(height: paddingSize * 2),
+                const SizedBox(height: kDefaultPadding * 2),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
