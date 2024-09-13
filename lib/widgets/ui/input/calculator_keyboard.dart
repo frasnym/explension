@@ -27,12 +27,14 @@ class CalculatorKeyboard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: texts
-          .map((text) => CalculatorButton(
-                text: text,
-                onPressed: (text == '<')
-                    ? () => onButtonPressed(calculatorDeleteValue)
-                    : () => onButtonPressed(text),
-              ))
+          .map(
+            (text) => CalculatorButton(
+              text: text,
+              onPressed: (text == '<')
+                  ? () => onButtonPressed(calculatorDeleteValue)
+                  : () => onButtonPressed(text),
+            ),
+          )
           .toList(),
     );
   }
@@ -55,9 +57,10 @@ class CalculatorButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                color: Colors.white,
-              ),
+          style: Theme.of(context)
+              .textTheme
+              .headlineLarge
+              ?.copyWith(color: Colors.white),
         ),
       ),
     );
