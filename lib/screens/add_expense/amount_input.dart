@@ -37,7 +37,7 @@ class AmountInputState extends State<AmountInput> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(borderRadius),
+                  borderRadius: BorderRadius.circular(kDefaultRadius),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -104,10 +104,7 @@ class AmountInputState extends State<AmountInput> {
               },
             ),
             Container(
-              decoration: const BoxDecoration(
-                color: Colors.red,
-              ),
-              padding: const EdgeInsets.all(kDefaultPadding),
+              padding: const EdgeInsets.only(top: kDefaultPadding),
               child: ElevatedButton(
                 onPressed: double.tryParse(widget.amountController.text) !=
                             null &&

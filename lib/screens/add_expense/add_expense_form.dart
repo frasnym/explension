@@ -67,7 +67,7 @@ class AddExpensePageState extends State<AddExpensePage> {
               color: Colors.grey,
               width: 1.0,
             ),
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(kDefaultRadius),
           ),
           child: Form(
             key: _formKey,

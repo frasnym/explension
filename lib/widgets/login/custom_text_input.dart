@@ -23,15 +23,15 @@ class CustomTextFormField extends StatelessWidget {
         label: Text(labelText),
         border: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+          borderRadius: BorderRadius.all(Radius.circular(kDefaultRadius)),
         ),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+          borderRadius: BorderRadius.all(Radius.circular(kDefaultRadius)),
         ),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+          borderRadius: BorderRadius.all(Radius.circular(kDefaultRadius)),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,

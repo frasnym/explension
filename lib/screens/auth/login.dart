@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                         margin: const EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
                           color: Colors.red,
-                          borderRadius: BorderRadius.circular(borderRadius),
+                          borderRadius: BorderRadius.circular(kDefaultRadius),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
