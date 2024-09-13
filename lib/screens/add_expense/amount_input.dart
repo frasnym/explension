@@ -117,20 +117,21 @@ class AmountInputState extends State<AmountInput> {
     );
   }
 
+  int _countOperator(String equation) {
+    return equation.split(RegExp(r'[+\-*/]')).length - 1;
+  }
+
   void _oneOperatorGuard(String value) {
     final isNextValueIsOperator = RegExp(r'^[+\-*/]$').hasMatch(value);
-    final operatorCount =
-        _equationController.text.split(RegExp(r'[+\-*/]')).length - 1;
-    if (operatorCount >= 1 && isNextValueIsOperator) {
+    if (_countOperator(_equationController.text) >= 1 &&
+        isNextValueIsOperator) {
       _evaluateExpression();
       _equationController.text = widget.amountController.text;
     }
   }
 
   void _calculateIsShowEquationInput() {
-    final operatorCount =
-        _equationController.text.split(RegExp(r'[+\-*/]')).length - 1;
-    if (operatorCount > 0) {
+    if (_countOperator(_equationController.text) > 0) {
       _isShowEquationInput = true;
     } else {
       _isShowEquationInput = false;
