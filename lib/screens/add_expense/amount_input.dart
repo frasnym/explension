@@ -75,19 +75,28 @@ class AmountInputState extends State<AmountInput> {
                     _handleBackspace();
                   } else {
                     _oneOperatorGuard(value);
+
+                    // Guard: Do nothing if equation to zero
+                    if (value == "0" || value == "000") {
+                      final lastChar = _equationController.text.isNotEmpty
+                          ? _equationController.text
+                              .substring(_equationController.text.length - 1)
+                          : "";
+                      if (_isOnlyOperator(lastChar) || lastChar.isEmpty) {
+                        return;
+                      }
+                    }
+
                     _equationController.text += value;
                   }
 
                   // Error Guard: Do nothing if input is OR only operator
-                  final isOnlyOperator =
-                      RegExp(r'^[+\-*/]$').hasMatch(_equationController.text);
-                  if (_equationController.text.isEmpty || isOnlyOperator) {
+                  if (_equationController.text.isEmpty ||
+                      _isOnlyOperator(_equationController.text)) {
                     _equationController.text = "";
                     widget.amountController.text = "";
                     return;
                   }
-
-                  // TODO: Check if number after operator is all zeros; if yes, remove it
 
                   _calculateIsShowEquationInput();
                   _evaluateExpression();
@@ -119,6 +128,10 @@ class AmountInputState extends State<AmountInput> {
 
   int _countOperator(String equation) {
     return equation.split(RegExp(r'[+\-*/]')).length - 1;
+  }
+
+  bool _isOnlyOperator(String equation) {
+    return RegExp(r'^[+\-*/]$').hasMatch(equation);
   }
 
   void _oneOperatorGuard(String value) {
