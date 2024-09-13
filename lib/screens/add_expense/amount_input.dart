@@ -74,9 +74,23 @@ class AmountInputState extends State<AmountInput> {
                   if (value == 'Backspace') {
                     _handleBackspace();
                   } else {
+                    _oneOperatorGuard(value);
                     _equationController.text += value;
-                    _evaluateExpression();
                   }
+
+                  // Error Guard: Do nothing if input is OR only operator
+                  final isOnlyOperator =
+                      RegExp(r'^[+\-*/]$').hasMatch(_equationController.text);
+                  if (_equationController.text.isEmpty || isOnlyOperator) {
+                    _equationController.text = "";
+                    widget.amountController.text = "";
+                    return;
+                  }
+
+                  // TODO: Check if number after operator is all zeros; if yes, remove it
+
+                  _calculateIsShowEquationInput();
+                  _evaluateExpression();
                 });
               },
             ),
@@ -103,36 +117,35 @@ class AmountInputState extends State<AmountInput> {
     );
   }
 
+  void _oneOperatorGuard(String value) {
+    final isNextValueIsOperator = RegExp(r'^[+\-*/]$').hasMatch(value);
+    final operatorCount =
+        _equationController.text.split(RegExp(r'[+\-*/]')).length - 1;
+    if (operatorCount >= 1 && isNextValueIsOperator) {
+      _evaluateExpression();
+      _equationController.text = widget.amountController.text;
+    }
+  }
+
+  void _calculateIsShowEquationInput() {
+    final operatorCount =
+        _equationController.text.split(RegExp(r'[+\-*/]')).length - 1;
+    if (operatorCount > 0) {
+      _isShowEquationInput = true;
+    } else {
+      _isShowEquationInput = false;
+    }
+  }
+
   void _handleBackspace() {
     if (_equationController.text.isNotEmpty) {
       _equationController.text = _equationController.text
           .substring(0, _equationController.text.length - 1);
-      _evaluateExpression();
     }
   }
 
   void _evaluateExpression() {
     try {
-      final isOnlyOperator =
-          RegExp(r'^[+\-*/]$').hasMatch(_equationController.text);
-
-      // Do nothing if input is OR only operator
-      if (_equationController.text.isEmpty || isOnlyOperator) {
-        _equationController.text = "";
-        widget.amountController.text = "";
-        return;
-      }
-
-      final operatorCount =
-          _equationController.text.split(RegExp(r'[+\-*/]')).length - 1;
-      if (operatorCount > 0) {
-        _isShowEquationInput = true;
-      } else {
-        _isShowEquationInput = false;
-      }
-
-      // TODO: Check if number after operator is all zeros; if yes, remove it
-
       // Calculate the result using math_expressions package
       final expression = Parser().parse(_equationController.text);
       final result = expression.evaluate(EvaluationType.REAL, ContextModel());
